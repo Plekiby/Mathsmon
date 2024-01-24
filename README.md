@@ -1,2 +1,2 @@
 # Mathsmon
-Projet S4 de Lekiby Pierre-André et Sainth-Nathan Ahoussi
+Projet S4 de Lekiby Pierre-André, Benjilali Iliasse et Ahoussi Sainth-Nathan
