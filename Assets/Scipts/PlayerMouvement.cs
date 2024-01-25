@@ -2,24 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
+    public float moveSpeed;
 
-    public Rigidbody2D rb;
-    public float vitesse = 2000f;
-    Vector2 mouvement;
-    public Animator animator;
+    private bool isMoving;
+    private Vector2 input;
 
-    // Update is called once per frame
+    private Animator animator;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     void Update()
     {
-        mouvement.x =  Input.GetAxisRaw("Horizontal");
-        mouvement.y = Input.GetAxisRaw("Vertical");
+        if (!isMoving)
+        {
+            input.x = Input.GetAxisRaw("Horizontal");
+            input.y = Input.GetAxisRaw("Vertical");
 
-        animator.SetFloat("Horizontal", mouvement.x);
-        animator.SetFloat("Vertical", mouvement.y);
-        animator.SetFloat("Speed", mouvement.magnitude);
+            if (input.x != 0) {
+                input.y = 0;
+            }if (input !=  Vector2.zero) {
+                animator.SetFloat("moveX", input.x);
+                animator.SetFloat("moveY", input.y);
 
-        rb.MovePosition(rb.position + mouvement * vitesse * Time.deltaTime);
+                var targetPos = transform.position;
+                targetPos.x += input.x;
+                targetPos.y += input.y;
+
+                StartCoroutine(Move(targetPos));
+            }
+        }
+        animator.SetBool("isMoving", isMoving);
+    }
+
+    IEnumerator Move(Vector3 targetPos)
+    {
+        isMoving = true;
+        while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon) 
+        { 
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+        transform.position = targetPos;
+
+        isMoving = false;
     }
 }
