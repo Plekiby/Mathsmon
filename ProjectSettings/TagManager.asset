@@ -50,11 +50,11 @@ TagManager:
   - name: Chemins
     uniqueID: 2928621001
     locked: 0
-  - name: "ObjetsArri\xE8re"
-    uniqueID: 3016458519
-    locked: 0
   - name: Maisons
     uniqueID: 879899415
+    locked: 0
+  - name: "ObjetsArri\xE8re"
+    uniqueID: 3016458519
     locked: 0
   - name: Player
     uniqueID: 4141158865
