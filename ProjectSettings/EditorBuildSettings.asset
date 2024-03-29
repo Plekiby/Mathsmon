@@ -17,4 +17,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/mainScene.unity
     guid: 3f466916225b08d47a43362873e9400a
+  - enabled: 0
+    path: Assets/Scenes/Coudanne/Laboratoire/Laboratoire.unity
+    guid: 98b32d0802cf5b9428623dc3941f480c
+  - enabled: 0
+    path: Assets/Scenes/Coudanne/Coudanne.unity
+    guid: 8f96e9025c9fc614e9263c6c288af433
   m_configObjects: {}

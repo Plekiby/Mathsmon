@@ -9,7 +9,7 @@ public class ChangeSceneOnTimer : MonoBehaviour
     public string sceneName;
     private void Update()
     {
-        changeTime += Time.deltaTime;
+        changeTime -= Time.deltaTime;
         if (changeTime <= 0)
         {
             SceneManager.LoadScene(sceneName);
