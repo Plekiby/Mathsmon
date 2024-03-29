@@ -19,9 +19,6 @@ public class Addition : MonoBehaviour
         this.number1 = number1;
     }
 
-
-
-
     private int getnumber2()
     {
         return this.number2;
@@ -43,27 +40,56 @@ public class Addition : MonoBehaviour
     }
 
 
-
-
-    private void CalculateAnswer()
+    private void Start()
     {
-        numberAnswer = number2 * number1;  
-    }
-
-   
-    public void SimpleQuestion()
-    {
-        if (int.TryParse(_inputField.text, out int userAnswer) && userAnswer == numberAnswer)
-        {
-            _textFields[2].text = "Correct!";
-        }
-        else
-        {
-            _textFields[2].text = "Wrong, the correct answer is " + numberAnswer;
-        }
+        CreateNewQuestion();
     }
 
 
 
+    private int CalculateAnswerFacile()
+    {
+        numberAnswer = number2 + number1;  
+        return numberAnswer;
+    }
+
+
+    private void CalculateAnswerMoyen()
+    {
+        numberAnswer = number2 + number1;
+        if (numberAnswer < number1)
+        {
+            number2 = number1 - numberAnswer;
+
+        } else if (numberAnswer > number1) {
+            number2 = numberAnswer - number1;
+        }
+        
+    }
+
+    private int CalculateAnswerDifficile()
+    {
+        numberAnswer = - number2 + number1;
+        return numberAnswer;
+    }
+
+
+    public void CreateNewQuestion()
+    {
+        var rand = new Random();
+        number2 = rand.Next(2000);
+        number1 = rand.Next(2000);
+
+        /// if () {
+        ///  int reponse = CalculateAnswerFacile();
+        /// }
+        ///else if ()
+        /// {
+        ///int reponse = CalculateAnswerMoyen();
+        ///}else if ()
+        /// {
+        /// int reponse = CalculateAnswerDifficile();
+        ///}
+    }
 
 }
