@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5aa4a7f37a22714c9924381e9ade610, type: 3}
+  m_Name: Additix
+  m_EditorClassIdentifier: 
+  name: Additix
+  frontSprite: {fileID: 21300000, guid: 9c1a6414fc9ac2d4881e085e64a3259c, type: 3}
+  backSprite: {fileID: 21300000, guid: bb98817fabde8d14d8dd44d8ffd6f76e, type: 3}
+  type1: 1
+  maxHp: 45
+  attack: 49
+  defense: 49
+  speed: 45
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: f2067b4b4af7c404cbdb0ad7e8c7fd29, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 2800e0f407eb3f04b841f7f887f98642, type: 2}
+    level: 4
+  - moveBase: {fileID: 11400000, guid: 46f13c1b2aa23b946b935a36f83c7748, type: 2}
+    level: 7
