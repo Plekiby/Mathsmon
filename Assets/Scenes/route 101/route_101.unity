@@ -5062,7 +5062,6 @@ GameObject:
   - component: {fileID: 650007035}
   - component: {fileID: 650007037}
   - component: {fileID: 650007036}
-  - component: {fileID: 650007034}
   m_Layer: 0
   m_Name: EnemyHud
   m_TagString: Untagged
@@ -5070,21 +5069,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &650007034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 650007033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 941e6ca4182684a41a11139d0694b0dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nameText: {fileID: 2028573550}
-  levelText: {fileID: 1551171121}
-  hpBar: {fileID: 0}
 --- !u!224 &650007035
 RectTransform:
   m_ObjectHideFlags: 0
@@ -57448,7 +57432,6 @@ GameObject:
   - component: {fileID: 1085986085}
   - component: {fileID: 1085986088}
   - component: {fileID: 1085986087}
-  - component: {fileID: 1085986089}
   m_Layer: 0
   m_Name: PlayerHud
   m_TagString: Untagged
@@ -57516,21 +57499,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1085986084}
   m_CullTransparentMesh: 1
---- !u!114 &1085986089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1085986084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 941e6ca4182684a41a11139d0694b0dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nameText: {fileID: 1882077946}
-  levelText: {fileID: 2131888851}
-  hpBar: {fileID: 0}
 --- !u!1 &1120650905
 GameObject:
   m_ObjectHideFlags: 0
@@ -60545,7 +60513,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1839011927}
-  - component: {fileID: 1839011928}
   m_Layer: 0
   m_Name: BattleSystem
   m_TagString: Untagged
@@ -60570,22 +60537,6 @@ Transform:
   - {fileID: 1018325336}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1839011928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1839011926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ad464efcee86cd498d1dbe4e4c072fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerUnit: {fileID: 0}
-  enemyUnit: {fileID: 0}
-  playerHud: {fileID: 0}
-  enemyHud: {fileID: 650007034}
 --- !u!1 &1882077944
 GameObject:
   m_ObjectHideFlags: 0
