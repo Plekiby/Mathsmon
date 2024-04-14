@@ -15,7 +15,16 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         playerController.OnEncountered += StartBattle;
-        EndBattle(battleSystem.OnBattleOver);
+        battleSystem.OnBattleOver += EndBattle;
+
+        // Assurez-vous que le système de combat est désactivé au démarrage
+        battleSystem.gameObject.SetActive(false);
+
+        // Assurez-vous que la caméra du monde est active au démarrage
+        worldCamera.gameObject.SetActive(true);
+
+        // Initialiser le jeu en mode FreeRoam
+        state = GameState.FreeRoam;
     }
 
     void StartBattle()
@@ -24,7 +33,10 @@ public class GameController : MonoBehaviour
         battleSystem.gameObject.SetActive(true);
         worldCamera.gameObject.SetActive(false);
 
-        battleSystem.StartBattle();
+        var playerParty = playerController.GetComponent<PokemonParty>();
+        var wildPokemon = FindObjectOfType<MapArea>().GetComponent<MapArea>().GetRandomWildPokemon();
+
+        battleSystem.StartBattle(playerParty, wildPokemon);
     }
 
     void EndBattle(bool won)

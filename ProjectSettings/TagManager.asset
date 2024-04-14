@@ -8,7 +8,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Grass
   - Water
   - UI
   - ObjetsSolidesLayer
@@ -47,6 +47,9 @@ TagManager:
   - name: Background
     uniqueID: 2347337117
     locked: 0
+  - name: grass
+    uniqueID: 3448171163
+    locked: 0
   - name: Chemins
     uniqueID: 2928621001
     locked: 0
@@ -64,7 +67,4 @@ TagManager:
     locked: 0
   - name: bordure
     uniqueID: 2807320621
-    locked: 0
-  - name: New Layer 9
-    uniqueID: 2182824065
     locked: 0
