@@ -18,6 +18,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] GameObject pokeballSprite;
 
 
+
     public event Action<bool> OnBattleOver;
 
     BattleState state;
@@ -66,6 +67,7 @@ public class BattleSystem : MonoBehaviour
 
     void OpenPartyScreen()
     {
+        playerHud.gameObject.SetActive(false);  // Désactiver le Player HUD
         state = BattleState.PartyScreen;
         partyScreen.SetPartyData(playerParty.Pokemons);
         partyScreen.gameObject.SetActive(true);
@@ -82,7 +84,6 @@ public class BattleSystem : MonoBehaviour
     IEnumerator PerformPlayerMove()
     {
         state = BattleState.Busy;
-
         var move = playerUnit.Pokemon.Moves[currentMove];
         yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name} utilise {move.Base.Name}");
 
@@ -90,22 +91,22 @@ public class BattleSystem : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         enemyUnit.PlayHitAnimation();
-        var damageDetails = enemyUnit.Pokemon.TakeDamage(move, playerUnit.Pokemon);
-        yield return enemyHud.UpdateHP();
+        bool isKO = enemyUnit.Pokemon.TakeDamage(move, playerUnit.Pokemon);  // Applique dégâts à l'ennemi
+        yield return enemyHud.UpdateHP();  // Mise à jour des HP de l'ennemi dans l'interface utilisateur
 
-        if (damageDetails)
+        if (isKO)
         {
-            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} est KO");
+            /*yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} est KO");
             enemyUnit.PlayFaintAnimation();
-
-            yield return new WaitForSeconds(2f);
-            OnBattleOver(true);
+            yield return new WaitForSeconds(2f);*/
+            StartCoroutine(HandlePokemonFainted(enemyUnit));
         }
         else
         {
-            StartCoroutine(EnemyMove());
+            StartCoroutine(EnemyMove());  // Continue avec le mouvement de l'ennemi
         }
     }
+
 
     IEnumerator EnemyMove()
     {
@@ -144,7 +145,62 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-  
+
+    IEnumerator HandlePokemonFainted(BattleUnit faintedUnit)
+    {
+        yield return dialogBox.TypeDialog($"{faintedUnit.Pokemon.Base.Name} est KO!");
+        faintedUnit.PlayFaintAnimation();
+        yield return new WaitForSeconds(2f);  // Attendez que l'animation de faint se termine
+
+        if (faintedUnit == enemyUnit)  // Si l'unité ennemie est K.O.
+        {
+            int expGain = 1;
+            playerUnit.Pokemon.GainWin();
+            yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name} a gagné {expGain} combat !");
+
+            yield return playerHud.SetExpSmooth(true);  // Animate EXP bar
+
+            while (playerUnit.Pokemon.CheckForLevelUp())
+            {
+                playerUnit.Hud.SetLevel();
+                yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name} monte au niveau {playerUnit.Pokemon.Level}!");
+                yield return playerHud.SetExpSmooth(true);  // Animate EXP bar from 0 after leveling up
+            }
+        }
+
+        CheckForBattleOver(faintedUnit);
+    }
+
+
+
+    void CheckForBattleOver(BattleUnit faintedUnit)
+    {
+        if (faintedUnit.IsPlayerUnit)
+        {
+            var nextPokemon = playerParty.GetHealthyPokemon();
+            if (nextPokemon != null)
+                OpenPartyScreen();
+            else
+                OnBattleOver(false);
+        }
+        else OnBattleOver(true);
+
+        /*else
+        {
+            if (!isTrainerBattle)
+            {
+                OnBattleOver(true);
+            }
+            else
+            {
+                var nextPokemon = trainerParty.GetHealthyPokemon();
+                if (nextPokemon != null)
+                    StartCoroutine(AboutToUse(nextPokemon));
+                else
+                    BattleOver(true);
+            }
+        }*/
+    }
 
     public void HandleUpdate()
     {
@@ -268,15 +324,17 @@ public class BattleSystem : MonoBehaviour
             state = BattleState.Busy;
             StartCoroutine(SwitchPokemon(selectedMember));
         }
-        else if (Input.GetKeyDown(KeyCode.X))
-        {
-            partyScreen.gameObject.SetActive(false);
-            PlayerAction();
-        }
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                partyScreen.gameObject.SetActive(false);
+                playerHud.gameObject.SetActive(true);  // Réactiver le Player HUD
+                PlayerAction();
+            }
     }
 
     IEnumerator SwitchPokemon(Pokemon newPokemon)
     {
+        playerHud.gameObject.SetActive(true);  // Réactiver le Player HUD
         if (playerUnit.Pokemon.HP > 0)
         {
             yield return dialogBox.TypeDialog($"Reviens vite {playerUnit.Pokemon.Base.Name}");
@@ -291,6 +349,9 @@ public class BattleSystem : MonoBehaviour
 
         StartCoroutine(EnemyMove());
     }
+
+
+
 
     IEnumerator ThrowPokeball()
     {
@@ -315,12 +376,16 @@ public class BattleSystem : MonoBehaviour
 
         if (shakeCount == 4)
         {
-            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} was caught");
+            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} est capturé");
             yield return pokeball.DOFade(0, 1.5f).WaitForCompletion();
             playerParty.AddPokemon(enemyUnit.Pokemon);
-            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} has been added to your party");
+            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} est ajouté à votre equipe");
             Destroy(pokeballObj);
+            enemyUnit.ResetScale();  // Appeler cette méthode pour réinitialiser l'échelle après un succès de capture
             OnBattleOver(true);
+
+            
+
         }
         else
         {
@@ -329,9 +394,9 @@ public class BattleSystem : MonoBehaviour
             yield return enemyUnit.PlayBreakOutAnimation();
 
             if (shakeCount < 2)
-                yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} broke free");
+                yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} est sorti facilement");
             else
-                yield return dialogBox.TypeDialog($"Almost caught it!");
+                yield return dialogBox.TypeDialog($"Presque attrapé!");
 
             Destroy(pokeballObj);
             state = BattleState.PlayerAction;

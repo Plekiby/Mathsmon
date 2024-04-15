@@ -6,64 +6,32 @@ using UnityEngine;
 public class PokemonBase : ScriptableObject
 {
     [SerializeField] string name;
-
-    [SerializeField] Sprite frontSprite;
-    [SerializeField] Sprite backSprite;
-
+    [SerializeField] Sprite frontSprite, backSprite;
     [SerializeField] PokemonType type1;
-
-    // Base Stats
-    [SerializeField] int maxHp;
-    [SerializeField] int attack;
-    [SerializeField] int defense;
-    [SerializeField] int speed;
-
+    [SerializeField] int maxHp, attack, defense, speed;
     [SerializeField] int catchRate = 255;
-
-
     [SerializeField] List<LearnableMove> learnableMoves;
 
-    public string Name {
-        get { return name; }
-    }
-
-    public Sprite FrontSprite {
-        get { return frontSprite; }
-    }
-
-    public Sprite BackSprite {
-        get { return backSprite; }
-    }
-
-    public PokemonType Type1 {
-        get { return type1; }
-    }
 
 
-    public int MaxHp {
-        get { return maxHp; }
-    }
-
-    public int Attack {
-        get { return attack; }
-    }
-
-
-    public int Defense {
-        get { return defense; }
-    }
-
-
-    public int Speed {
-        get { return speed; }
-    }
-
-    public List<LearnableMove> LearnableMoves {
-        get { return learnableMoves; }
-    }
-
+    public string Name => name;
+    public Sprite FrontSprite => frontSprite;
+    public Sprite BackSprite => backSprite;
+    public PokemonType Type1 => type1;
+    public int MaxHp => maxHp;
+    public int Attack => attack;
+    public int Defense => defense;
+    public int Speed => speed;
+    public List<LearnableMove> LearnableMoves => learnableMoves;
     public int CatchRate => catchRate;
 
+    public void IncreaseBaseStats()
+    {
+        maxHp += 1;
+        attack += 1;
+        defense += 1;
+        speed += 1;
+    }
 }
 
 [System.Serializable]
@@ -72,11 +40,13 @@ public class LearnableMove
     [SerializeField] MoveBase moveBase;
     [SerializeField] int level;
 
-    public MoveBase Base {
+    public MoveBase Base
+    {
         get { return moveBase; }
     }
 
-    public int Level {
+    public int Level
+    {
         get { return level; }
     }
 }
@@ -84,9 +54,33 @@ public class LearnableMove
 public enum PokemonType
 {
     None,
-    Addition,
-    Soustraction,
-    Multiplication,
-    Division,
-    Equation
+    Normal,
+    Fire,
+    Water,
+    Electric,
+    Grass,
+    Ice,
+    Fighting,
+    Poison,
+    Ground,
+    Flying,
+    Psychic,
+    Bug,
+    Rock,
+    Ghost,
+    Dragon
 }
+
+public enum Stat
+{
+    Attack,
+    Defense,
+    SpAttack,
+    SpDefense,
+    Speed,
+
+    // These 2 are not actual stats, they're used to boost the moveAccuracy
+    Accuracy,
+    Evasion
+}
+

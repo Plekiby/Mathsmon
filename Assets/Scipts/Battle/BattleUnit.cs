@@ -7,8 +7,18 @@ using DG.Tweening;
 public class BattleUnit : MonoBehaviour
 {
     [SerializeField] bool isPlayerUnit;
+    [SerializeField] BattleHud hud;
 
+    public bool IsPlayerUnit
+    {
+        get { return isPlayerUnit; }
+    }
     public Pokemon Pokemon { get; set; }
+
+    public BattleHud Hud
+    {
+        get { return hud; }
+    }
 
     Image image;
     Vector3 orginalPos;
@@ -29,6 +39,7 @@ public class BattleUnit : MonoBehaviour
             image.sprite = Pokemon.Base.FrontSprite;
 
         image.color = originalColor;
+        image.transform.localScale = new Vector3(1f, 1f, 1f);  // Réinitialise l'échelle à la normale
         PlayEnterAnimation();
     }
 
@@ -60,12 +71,14 @@ public class BattleUnit : MonoBehaviour
         sequence.Append(image.DOColor(originalColor, 0.1f));
     }
 
-    public void PlayFaintAnimation()
+    public IEnumerator PlayFaintAnimation()
     {
         var sequence = DOTween.Sequence();
         sequence.Append(image.transform.DOLocalMoveY(orginalPos.y - 150f, 0.5f));
         sequence.Join(image.DOFade(0f, 0.5f));
+        yield return sequence.WaitForCompletion();  // Attendez que toute la séquence soit terminée
     }
+
 
     public IEnumerator PlayCaptureAnimation()
     {
@@ -76,12 +89,17 @@ public class BattleUnit : MonoBehaviour
         yield return sequence.WaitForCompletion();
     }
 
+    public void ResetScale()
+    {
+        transform.localScale = new Vector3(1f, 1f, 1f);  // Réinitialise l'échelle à la normale
+    }
+
     public IEnumerator PlayBreakOutAnimation()
     {
         var sequence = DOTween.Sequence();
         sequence.Append(image.DOFade(1, 0.5f));
         sequence.Join(transform.DOLocalMoveY(orginalPos.y, 0.5f));
-        sequence.Join(transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f));
+        sequence.Join(transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f));  // Remet l'échelle à la normale
         yield return sequence.WaitForCompletion();
     }
 }
