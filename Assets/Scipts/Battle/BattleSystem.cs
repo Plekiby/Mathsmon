@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+
 
 public enum BattleState { Start, PlayerAction, PlayerMove, EnemyMove, Busy, PartyScreen }
 
@@ -13,6 +15,8 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] BattleHud enemyHud;
     [SerializeField] BattleDialogBox dialogBox;
     [SerializeField] PartyScreen partyScreen;
+    [SerializeField] GameObject pokeballSprite;
+
 
     public event Action<bool> OnBattleOver;
 
@@ -20,14 +24,20 @@ public class BattleSystem : MonoBehaviour
     int currentAction;
     int currentMove;
     int currentMember;
+    bool switchDueToKO = false;  // Ce booléen détermine la raison du changement de Pokémon
+
+    int escapeAttempts;
 
     PokemonParty playerParty;
     Pokemon wildPokemon;
+    PlayerController player;
 
     public void StartBattle(PokemonParty playerParty, Pokemon wildPokemon)
     {
         this.playerParty = playerParty;
         this.wildPokemon = wildPokemon;
+        player = playerParty.GetComponent<PlayerController>();
+
         StartCoroutine(SetupBattle());
     }
 
@@ -150,6 +160,10 @@ public class BattleSystem : MonoBehaviour
         {
             HandlePartySelection();
         }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            StartCoroutine(ThrowPokeball());
+        }
     }
 
     void HandleActionSelection()
@@ -177,6 +191,7 @@ public class BattleSystem : MonoBehaviour
             else if (currentAction == 1)
             {
                 // Bag
+                StartCoroutine(ThrowPokeball());
             }
             else if (currentAction == 2)
             {
@@ -186,6 +201,7 @@ public class BattleSystem : MonoBehaviour
             else if (currentAction == 3)
             {
                 // Run
+                StartCoroutine(TryToEscape());
             }
         }
     }
@@ -275,4 +291,114 @@ public class BattleSystem : MonoBehaviour
 
         StartCoroutine(EnemyMove());
     }
+
+    IEnumerator ThrowPokeball()
+    {
+        state = BattleState.Busy;
+        yield return dialogBox.TypeDialog($"Vous utilisez POKEBALL!");
+
+        var pokeballObj = Instantiate(pokeballSprite, playerUnit.transform.position - new Vector3(2, 0), Quaternion.identity);
+        var pokeball = pokeballObj.GetComponent<SpriteRenderer>();
+
+        // Correct use of DOTween's DOJump
+        yield return pokeball.transform.DOJump(enemyUnit.transform.position + new Vector3(0, 2), 2f, 1, 1f).WaitForCompletion();
+        yield return enemyUnit.PlayCaptureAnimation();
+        yield return pokeball.transform.DOMoveY(enemyUnit.transform.position.y - 1.3f, 0.5f).WaitForCompletion();
+
+        int shakeCount = TryToCatchPokemon(enemyUnit.Pokemon);
+
+        for (int i = 0; i < Mathf.Min(shakeCount, 3); ++i)
+        {
+            yield return new WaitForSeconds(0.5f);
+            yield return pokeball.transform.DOPunchRotation(new Vector3(0, 0, 10f), 0.8f).WaitForCompletion();
+        }
+
+        if (shakeCount == 4)
+        {
+            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} was caught");
+            yield return pokeball.DOFade(0, 1.5f).WaitForCompletion();
+            playerParty.AddPokemon(enemyUnit.Pokemon);
+            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} has been added to your party");
+            Destroy(pokeballObj);
+            OnBattleOver(true);
+        }
+        else
+        {
+            yield return new WaitForSeconds(1f);
+            pokeball.DOFade(0, 0.2f);
+            yield return enemyUnit.PlayBreakOutAnimation();
+
+            if (shakeCount < 2)
+                yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} broke free");
+            else
+                yield return dialogBox.TypeDialog($"Almost caught it!");
+
+            Destroy(pokeballObj);
+            state = BattleState.PlayerAction;
+        }
+    }
+
+    int TryToCatchPokemon(Pokemon pokemon)
+    {
+        float a = (3 * pokemon.MaxHp - 2 * pokemon.HP) * pokemon.Base.CatchRate * 1f / (3 * pokemon.MaxHp);
+
+        if (a >= 255)
+            return 4;
+
+        float b = 1048560 / Mathf.Sqrt(Mathf.Sqrt(16711680 / a));
+
+        int shakeCount = 0;
+        while (shakeCount < 4)
+        {
+            if (UnityEngine.Random.Range(0, 65535) >= b)
+                break;
+
+            ++shakeCount;
+        }
+
+        return shakeCount;
+    }
+
+    IEnumerator TryToEscape()
+    {
+        state = BattleState.Busy;
+        dialogBox.EnableActionSelector(false);  // Disable actions during escape attempt
+
+        // Assuming escape is not allowed in trainer battles
+        /*if (isTrainerBattle)
+        {
+            yield return dialogBox.TypeDialog("You can't run from trainer battles!");
+            yield break;
+        }*/
+
+        ++escapeAttempts;
+        int playerSpeed = playerUnit.Pokemon.Speed;
+        int enemySpeed = enemyUnit.Pokemon.Speed;
+
+        if (playerSpeed > enemySpeed)
+        {
+            yield return dialogBox.TypeDialog("Vous vous êtes échappé en toute sécurité!");
+            yield return new WaitForSeconds(1f);
+            OnBattleOver(false);
+        }
+        else
+        {
+            float f = ((playerSpeed * 128) / enemySpeed) + 30 * escapeAttempts;
+            f = f % 256;
+
+            if (UnityEngine.Random.Range(0, 256) < f)
+            {
+                yield return dialogBox.TypeDialog("Vous vous êtes échappé en toute sécurité!");
+                yield return new WaitForSeconds(1f);
+                OnBattleOver(false);
+            }
+            else
+            {
+                yield return dialogBox.TypeDialog("Échec de la fuite!");
+                yield return new WaitForSeconds(1f);
+                StartCoroutine(EnemyMove());  // Enemy takes a move if escape fails
+            }
+        }
+    }
+
 }

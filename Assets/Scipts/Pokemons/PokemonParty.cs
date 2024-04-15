@@ -27,4 +27,16 @@ public class PokemonParty : MonoBehaviour
     {
         return pokemons.Where(x => x.HP > 0).FirstOrDefault();
     }
+
+    public void AddPokemon(Pokemon newPokemon)
+    {
+        if (pokemons.Count < 3)
+        {
+            pokemons.Add(newPokemon);
+        }
+        else
+        {
+            // TODO: afficher un message qui dit que ca va effacer le dernier pokemon attrapé
+        }
+    }
 }
