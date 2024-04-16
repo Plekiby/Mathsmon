@@ -15,6 +15,11 @@ public class PokemonParty : MonoBehaviour
         }
     }
 
+    public int taille()
+    {
+        return pokemons.Count;
+    }
+
     private void Start()
     {
         foreach (var pokemon in pokemons)
@@ -39,4 +44,6 @@ public class PokemonParty : MonoBehaviour
             // TODO: afficher un message qui dit que ca va effacer le dernier pokemon attrapé
         }
     }
+
+
 }

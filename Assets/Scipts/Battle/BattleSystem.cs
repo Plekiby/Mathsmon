@@ -378,13 +378,23 @@ public class BattleSystem : MonoBehaviour
         {
             yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} est capturé");
             yield return pokeball.DOFade(0, 1.5f).WaitForCompletion();
-            playerParty.AddPokemon(enemyUnit.Pokemon);
-            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} est ajouté à votre equipe");
-            Destroy(pokeballObj);
-            enemyUnit.ResetScale();  // Appeler cette méthode pour réinitialiser l'échelle après un succès de capture
-            OnBattleOver(true);
-
-            
+            if (playerParty.taille() < 3)
+            {
+                playerParty.AddPokemon(enemyUnit.Pokemon);
+                // Trouver le PartyScreenP et mettre à jour l'UI
+                PartyScreenP partyScreen = FindObjectOfType<PartyScreenP>();
+                yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} est ajouté à votre equipe");
+                Destroy(pokeballObj);
+                enemyUnit.ResetScale();  // Appeler cette méthode pour réinitialiser l'échelle après un succès de capture
+                OnBattleOver(true);
+            }
+            else
+            {
+                yield return dialogBox.TypeDialog($"Votre equipe est pleine");
+                Destroy(pokeballObj);
+                enemyUnit.ResetScale();  // Appeler cette méthode pour réinitialiser l'échelle après un succès de capture
+                OnBattleOver(true);
+            }
 
         }
         else

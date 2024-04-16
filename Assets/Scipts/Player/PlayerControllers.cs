@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerControllers : MonoBehaviour
@@ -15,6 +14,7 @@ public class PlayerControllers : MonoBehaviour
     private Vector2 input;
 
     private Animator animator;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -22,12 +22,11 @@ public class PlayerControllers : MonoBehaviour
 
     public void HandleUpdate()
     {
-        if (!isMoving)
+        if (!isMoving && !SlideMenu.Instance.IsMenuOpen())
         {
             input.x = Input.GetAxisRaw("Horizontal");
             input.y = Input.GetAxisRaw("Vertical");
 
-            // remove diagonal movement
             if (input.x != 0) input.y = 0;
 
             if (input != Vector2.zero)
@@ -40,7 +39,9 @@ public class PlayerControllers : MonoBehaviour
                 targetPos.y += input.y;
 
                 if (IsWalkable(targetPos))
+                {
                     StartCoroutine(Move(targetPos));
+                }
             }
         }
 
@@ -56,8 +57,8 @@ public class PlayerControllers : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
             yield return null;
         }
-        transform.position = targetPos;
 
+        transform.position = targetPos;
         isMoving = false;
 
         CheckForEncounters();
@@ -69,7 +70,6 @@ public class PlayerControllers : MonoBehaviour
         {
             return false;
         }
-
         return true;
     }
 
@@ -80,7 +80,7 @@ public class PlayerControllers : MonoBehaviour
             if (UnityEngine.Random.Range(1, 101) <= 10)
             {
                 animator.SetBool("isMoving", false);
-                OnEncountered();
+                OnEncountered?.Invoke();
             }
         }
     }
