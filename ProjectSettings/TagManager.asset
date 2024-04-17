@@ -13,9 +13,9 @@ TagManager:
   - UI
   - ObjetsSolidesLayer
   - ObjetsPasSolidesLayer
-  - 
-  - 
-  - 
+  - interactableLayer
+  - GameLayers
+  - Player
   - 
   - 
   - 

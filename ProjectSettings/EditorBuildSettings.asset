@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
     path: Assets/Scenes/Intro.unity
     guid: c6bfae6852a94e3419e2b3f9a6b30d6e
@@ -15,12 +12,36 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: bd96e4c34d1990e4187490dea4cc7a48
   - enabled: 1
-    path: Assets/Scenes/Coudanne/Coudanne.unity
-    guid: 8f96e9025c9fc614e9263c6c288af433
-  - enabled: 0
     path: Assets/Scenes/Coudanne/mainScene.unity
     guid: 3f466916225b08d47a43362873e9400a
-  - enabled: 0
+  - enabled: 1
+    path: "Assets/Scenes/Coudanne/Ar\xE8ne_Addition/arene.unity"
+    guid: 7fa2ae125affbb14a9a8dcb3b3d147ae
+  - enabled: 1
+    path: Assets/Scenes/Coudanne/Boutique/Boutique.unity
+    guid: da0c8602c666d3346b4d9e4655803fbf
+  - enabled: 1
+    path: Assets/Scenes/Coudanne/Centre_Mathsmon/Mathsmon.unity
+    guid: 6827930f76e294e42948cd666fc52f06
+  - enabled: 1
+    path: Assets/Scenes/Coudanne/Ecole/ecole.unity
+    guid: d9fbb6ed0e9346343a5770d9e212d354
+  - enabled: 1
+    path: Assets/Scenes/Coudanne/Maison_PP/Rdc_PP.unity
+    guid: c24174659432e92428a964d7fcb8d9e0
+  - enabled: 1
+    path: Assets/Scenes/Coudanne/Maison_PP/Chambre_PP.unity
+    guid: 91cd68bad9bd1f14d8999f7213dd45e2
+  - enabled: 1
+    path: Assets/Scenes/Coudanne/Maison_Rival/Rdc_Rival.unity
+    guid: 099f92aa5e304834cbe51d0efea45057
+  - enabled: 1
+    path: Assets/Scenes/Coudanne/Maison_Rival/Chambre_Rival.unity
+    guid: 72214a1b3770f624396a382d00d69de8
+  - enabled: 1
     path: Assets/Scenes/Coudanne/Laboratoire/Laboratoire.unity
     guid: 98b32d0802cf5b9428623dc3941f480c
+  - enabled: 1
+    path: Assets/Scenes/route 101/route_101.unity
+    guid: a80b71917807dc145b7dc072706e5b61
   m_configObjects: {}

@@ -27,6 +27,18 @@ public class Pokemon
         winsRequiredForNextLevel = 2;  // Starting requirement for level 2
     }
 
+    // Serialize this Pokemon object to a Json string
+    public string Serialize()
+    {
+        return JsonUtility.ToJson(this);
+    }
+
+    // Deserialize a Json string to this Pokemon object
+    public static Pokemon Deserialize(string json)
+    {
+        return JsonUtility.FromJson<Pokemon>(json);
+    }
+
     public void Init()
     {
         HP = MaxHp;

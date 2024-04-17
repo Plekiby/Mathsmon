@@ -13,6 +13,8 @@ public class PokemonParty : MonoBehaviour
         {
             return pokemons;
         }
+        set { pokemons = value; }  // Ajouter un setter ici permet de modifier la liste de l'extérieur
+
     }
 
     public int taille()
