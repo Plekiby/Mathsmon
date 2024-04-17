@@ -12,6 +12,8 @@ public class PlayerControllers : MonoBehaviour
     public LayerMask grassLayer;
 
     public event Action OnEncountered;
+    public event Action<Collider2D> OnEnterTrainersView;
+
 
     public Vector3 Position => transform.position;
 
@@ -106,6 +108,16 @@ public class PlayerControllers : MonoBehaviour
                 animator.SetBool("isMoving", false);
                 OnEncountered?.Invoke();
             }
+        }
+    }
+
+    private void CheckIfInTrainersView()
+    {
+        var collider = Physics2D.OverlapCircle(transform.position, 0.2f, GameLayers.i.FovLayer);
+        if (collider != null)
+        {
+            animator.SetBool("isMoving", false);
+            OnEnterTrainersView?.Invoke(collider);
         }
     }
 }

@@ -19,7 +19,7 @@ public class TrainerController : MonoBehaviour
         SetFovRotation(character.Animator.DefaultDirection);
     }
 
-    public IEnumerator TriggerTrainerBattle(PlayerController player)
+    public IEnumerator TriggerTrainerBattle(PlayerControllers player)
     {
         // Show Exclamation
         exclamation.SetActive(true);
