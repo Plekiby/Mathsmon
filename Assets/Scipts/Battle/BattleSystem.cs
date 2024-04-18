@@ -17,6 +17,7 @@ public class BattleSystem : MonoBehaviour
     int currentMove;
     [SerializeField] private AdditionSimple additionSimple;
     [SerializeField] private AdditionMoyen additionMoyen;
+    [SerializeField] private AdditionDifficile additionDifficile;
     private MonoBehaviour activeGame;
 
     private void Start()
@@ -30,6 +31,8 @@ public class BattleSystem : MonoBehaviour
             activeGame = additionSimple;
         else if (gameType == "Moyen")
             activeGame = additionMoyen;
+        else if(gameType =="Difficile")
+            activeGame = additionDifficile;
     }
     public void OnAnswerSubmitted()
     {
@@ -39,7 +42,8 @@ public class BattleSystem : MonoBehaviour
             lastAnswerWasCorrect = additionSimple.AnswerQuestion();
         else if (activeGame == additionMoyen)
             lastAnswerWasCorrect = additionMoyen.AnswerQuestion();
-
+        else if(activeGame == additionDifficile)
+            lastAnswerWasCorrect = additionDifficile.AnswerQuestion();
         StartCoroutine(PerformPlayerMove(lastAnswerWasCorrect));
     }
 
@@ -65,6 +69,7 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.PlayerAction;
         dialogBox.EnableCalculBar(false);
         dialogBox.EnableCalculBarMoyen(false);
+        dialogBox.EnableCalculBarDifficile(false);
         StartCoroutine(dialogBox.TypeDialog("Choisissez une action"));
         dialogBox.EnableActionSelector(true);
     }
@@ -84,6 +89,7 @@ public class BattleSystem : MonoBehaviour
         var move = playerUnit.Pokemon.Moves[currentMove];
         dialogBox.EnableCalculBar(false);
         dialogBox.EnableCalculBarMoyen(false);
+        dialogBox.EnableCalculBarDifficile(false);
         yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name} used {move.Base.Name}");
         bool isFainted = enemyUnit.Pokemon.TakeDamage(move, playerUnit.Pokemon);
 
@@ -221,11 +227,36 @@ public class BattleSystem : MonoBehaviour
                     SetActiveGame("Moyen");
                     additionMoyen.NextQuestion();
 
-                } //else
-                  //{
-                  //dialogBox.EnableCalculBar(true);//Calcul Dificile
-                  //}
-            }//if (playerUnit.Pokemon.Base.Name == "Additix")
+                }
+                else
+                {
+                    dialogBox.EnableCalculBarDifficile(true);
+                    SetActiveGame("Difficile");
+                    additionDifficile.NextQuestion();
+                }
+
+            }//if (playerUnit.Pokemon.Base.Name == "Soustrix")
+             // {
+             //if (currentMove == 0)
+             //{
+             //dialogBox.EnableCalculBar(true);
+             //SetActiveGame("SoustractionSimple");
+             // soustractionSimple.NextQuestion();
+
+            //}
+            // if (currentMove == 1)
+            //{
+            //dialogBox.EnableCalculBarMoyen(true);
+            //SetActiveGame("SoustractionMoyen");
+            //soustractionMoyen.NextQuestion();
+
+            // }
+            // else
+            //{
+            //dialogBox.EnableCalculBarDifficile(true);
+            // SetActiveGame("SoustractionDifficile");
+            // soustractionDifficile.NextQuestion();
+            //}
         }
     }
 }

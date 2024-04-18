@@ -14,7 +14,8 @@ public class BattleDialogBox : MonoBehaviour
     [SerializeField] GameObject moveDetails;
     [SerializeField] GameObject calculBar;
     [SerializeField] GameObject calculBarMoyen;
-    
+    [SerializeField] GameObject calculBarDifficile;
+
     [SerializeField] List<Text> actionTexts;
     [SerializeField] List<Text> moveTexts;
     
@@ -50,10 +51,14 @@ public class BattleDialogBox : MonoBehaviour
     {
         calculBar.SetActive(enabled);
     }
-
     public void EnableCalculBarMoyen(bool enabled)
     {
         calculBarMoyen.SetActive(enabled);
+    } 
+    
+    public void EnableCalculBarDifficile(bool enabled)
+    {
+        calculBarDifficile.SetActive(enabled);
     }
 
     public void EnableMoveSelector(bool enabled)
