@@ -48,4 +48,8 @@ public class MultiplicationMoyen : MonoBehaviour
         number2.text = (_number1 * _number2).ToString();
         _hiddenAnswer = _number2;
     }
+    public void OnSubmitButtonPressed()
+    {
+        bool lastAnswerWasCorrect = AnswerQuestion();
+    }
 }

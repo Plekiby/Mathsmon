@@ -53,4 +53,9 @@ public class MultiplicationSimple : MonoBehaviour
         number2.text = _number2.ToString();
         _hiddenAnswer = CalculateAnswer(_number1, _number2);
     }
+
+    public void OnSubmitButtonPressed()
+    {
+        bool lastAnswerWasCorrect = AnswerQuestion();
+    }
 }

@@ -49,4 +49,9 @@ public class DivisionMoyen : MonoBehaviour
         number2.text = _result.ToString();
         _hiddenAnswer = _number2;
     }
+
+    public void OnSubmitButtonPressed()
+    {
+        bool lastAnswerWasCorrect = AnswerQuestion();
+    }
 }

@@ -12,9 +12,27 @@ public class BattleDialogBox : MonoBehaviour
     [SerializeField] GameObject actionSelector;
     [SerializeField] GameObject moveSelector;
     [SerializeField] GameObject moveDetails;
+
+
     [SerializeField] GameObject calculBar;
     [SerializeField] GameObject calculBarMoyen;
     [SerializeField] GameObject calculBarDifficile;
+
+    [SerializeField] GameObject calculBarSoutraction;
+    [SerializeField] GameObject calculBarSoutraMoyen;
+    [SerializeField] GameObject calculBarSoutraDifficile;
+
+
+    [SerializeField] GameObject calculBarMulti;
+    [SerializeField] GameObject calculBarMultiMoyen;
+    [SerializeField] GameObject calculBarMultiDifficile;
+
+
+    [SerializeField] GameObject calculBarDivi;
+    [SerializeField] GameObject calculBarDiviMoyen;
+    [SerializeField] GameObject calculBarDiviDifficile;
+
+
 
     [SerializeField] List<Text> actionTexts;
     [SerializeField] List<Text> moveTexts;
@@ -46,7 +64,7 @@ public class BattleDialogBox : MonoBehaviour
     {
         actionSelector.SetActive(enabled);
     }
-
+///////////////////////////Addition//////////////////////////////
     public void EnableCalculBar(bool enabled)
     {
         calculBar.SetActive(enabled);
@@ -54,12 +72,51 @@ public class BattleDialogBox : MonoBehaviour
     public void EnableCalculBarMoyen(bool enabled)
     {
         calculBarMoyen.SetActive(enabled);
-    } 
-    
+    }   
     public void EnableCalculBarDifficile(bool enabled)
     {
         calculBarDifficile.SetActive(enabled);
     }
+    ///////////////////////////Soustraction//////////////////////////////
+    public void EnableCalculBarSoustra(bool enabled)
+    {
+        calculBarSoutraction.SetActive(enabled);
+    }
+    public void EnableCalculBarSoustraMoyen(bool enabled)
+    {
+        calculBarSoutraMoyen.SetActive(enabled);
+    }
+    public void EnableCalculBarSoustraDifficile(bool enabled)
+    {
+        calculBarSoutraDifficile.SetActive(enabled);
+    }
+    ///////////////////////////Multiplication//////////////////////////////
+    public void EnableCalculBarMulti(bool enabled)
+    {
+        calculBarMulti.SetActive(enabled);
+    }
+    public void EnableCalculBarMultiMoyen(bool enabled)
+    {
+        calculBarMultiMoyen.SetActive(enabled);
+    }
+    public void EnableCalculBarMultiDifficile(bool enabled)
+    {
+        calculBarMultiDifficile.SetActive(enabled);
+    }
+    ///////////////////////////Division//////////////////////////////
+    public void EnableCalculBarDivi(bool enabled)
+    {
+        calculBarDivi.SetActive(enabled);
+    }
+    public void EnableCalculBarDiviMoyen(bool enabled)
+    {
+        calculBarDiviMoyen.SetActive(enabled);
+    }
+    public void EnableCalculBarDiviDifficile(bool enabled)
+    {
+        calculBarDiviDifficile.SetActive(enabled);
+    }
+    //////////////////////////////////////////////////////////////////
 
     public void EnableMoveSelector(bool enabled)
     {
