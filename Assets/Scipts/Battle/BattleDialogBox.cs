@@ -26,6 +26,59 @@ public class BattleDialogBox : MonoBehaviour
         dialogText.text = dialog;
     }
 
+    public void EnableCalculBar(bool enabled)
+    {
+        calculBar.SetActive(enabled);
+    }
+    public void EnableCalculBarMoyen(bool enabled)
+    {
+        calculBarMoyen.SetActive(enabled);
+    }
+    public void EnableCalculBarDifficile(bool enabled)
+    {
+        calculBarDifficile.SetActive(enabled);
+    }
+    ///////////////////////////Soustraction//////////////////////////////
+    public void EnableCalculBarSoustra(bool enabled)
+    {
+        calculBarSoutraction.SetActive(enabled);
+    }
+    public void EnableCalculBarSoustraMoyen(bool enabled)
+    {
+        calculBarSoutraMoyen.SetActive(enabled);
+    }
+    public void EnableCalculBarSoustraDifficile(bool enabled)
+    {
+        calculBarSoutraDifficile.SetActive(enabled);
+    }
+    ///////////////////////////Multiplication//////////////////////////////
+    public void EnableCalculBarMulti(bool enabled)
+    {
+        calculBarMulti.SetActive(enabled);
+    }
+    public void EnableCalculBarMultiMoyen(bool enabled)
+    {
+        calculBarMultiMoyen.SetActive(enabled);
+    }
+    public void EnableCalculBarMultiDifficile(bool enabled)
+    {
+        calculBarMultiDifficile.SetActive(enabled);
+    }
+    ///////////////////////////Division//////////////////////////////
+    public void EnableCalculBarDivi(bool enabled)
+    {
+        calculBarDivi.SetActive(enabled);
+    }
+    public void EnableCalculBarDiviMoyen(bool enabled)
+    {
+        calculBarDiviMoyen.SetActive(enabled);
+    }
+    public void EnableCalculBarDiviDifficile(bool enabled)
+    {
+        calculBarDiviDifficile.SetActive(enabled);
+    }
+    //////////////////////////////////////////////////////////////////
+
     public IEnumerator TypeDialog(string dialog)
     {
         dialogText.text = "";
