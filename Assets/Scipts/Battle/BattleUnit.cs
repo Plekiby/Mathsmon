@@ -30,6 +30,8 @@ public class BattleUnit : MonoBehaviour
         originalColor = image.color;
     }
 
+ 
+
     public void Setup(Pokemon pokemon)
     {
         Pokemon = pokemon;
@@ -38,8 +40,12 @@ public class BattleUnit : MonoBehaviour
         else
             image.sprite = Pokemon.Base.FrontSprite;
 
+        hud.gameObject.SetActive(true);
+        hud.SetData(pokemon);
+
         image.color = originalColor;
         image.transform.localScale = new Vector3(1f, 1f, 1f);  // Réinitialise l'échelle à la normale
+
         PlayEnterAnimation();
     }
 
@@ -92,6 +98,11 @@ public class BattleUnit : MonoBehaviour
     public void ResetScale()
     {
         transform.localScale = new Vector3(1f, 1f, 1f);  // Réinitialise l'échelle à la normale
+    }
+
+    public void Clear()
+    {
+        hud.gameObject.SetActive(false);
     }
 
     public IEnumerator PlayBreakOutAnimation()

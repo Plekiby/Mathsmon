@@ -54,21 +54,11 @@ public class LearnableMove
 public enum PokemonType
 {
     None,
-    Normal,
-    Fire,
-    Water,
-    Electric,
-    Grass,
-    Ice,
-    Fighting,
-    Poison,
-    Ground,
-    Flying,
-    Psychic,
-    Bug,
-    Rock,
-    Ghost,
-    Dragon
+    Addition,
+    Soustraction,
+    Division,
+    Multiplication,
+    Equation
 }
 
 public enum Stat

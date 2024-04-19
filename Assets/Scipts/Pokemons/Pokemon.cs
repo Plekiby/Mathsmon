@@ -16,7 +16,8 @@ public class Pokemon
 
     public PokemonBase Base => _base;
     public int Level => level;
-  
+
+    public Move CurrentMove { get; set; }
 
     public int HP { get; set; }
     public List<Move> Moves { get; set; }
@@ -74,6 +75,12 @@ public class Pokemon
     {
         currentWins++;
    
+    }
+
+
+    public void OnBattleOver()
+    {
+       
     }
 
     public void LevelUp()
