@@ -37,6 +37,8 @@ public class BattleDialogBox : MonoBehaviour
 
     [SerializeField] Text yesText;
     [SerializeField] Text noText;
+    [SerializeField] Text descText;
+
 
     public void SetDialog(string dialog)
     {
