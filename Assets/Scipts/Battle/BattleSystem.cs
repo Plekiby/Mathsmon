@@ -305,65 +305,74 @@ public class BattleSystem : MonoBehaviour
             ActionSelection();
     }
 
+    
+
     IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move move)
     {
-
+        // Reset all calcul bars visibility
         test();
-        yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name} used {move.Base.Name}");
-        /*
-        if (CheckIfMoveHits(move, sourceUnit.Pokemon, targetUnit.Pokemon))
-        {*/
 
+        // Check if it's the player's turn and set up the correct game
         if (sourceUnit.IsPlayerUnit)
         {
-            if (lastAnswerWasCorrect == true)
+            ActivateCalculBar(playerUnit.Pokemon.Base.Name, currentMove);
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Return)); // Wait for player to press Enter
+
+            OnAnswerSubmitted(); // Check the answer after submission
+
+            test();
+
+            if (!lastAnswerWasCorrect) // If the answer is wrong, skip the attack
             {
-                sourceUnit.PlayAttackAnimation();
-                yield return new WaitForSeconds(1f);
-                targetUnit.PlayHitAnimation();
-
-
-                var damageDetails = targetUnit.Pokemon.TakeDamage(move, sourceUnit.Pokemon);
-                yield return targetUnit.Hud.UpdateHP();
-
-
-                if (targetUnit.Pokemon.HP <= 0)
-                {
-                    yield return HandlePokemonFainted(targetUnit);
-                }
-            }
-            else
-            {
-                yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name} a loupé {move.Base.Name}");
-                dialogBox.EnableCalculBar(false);
-                dialogBox.EnableCalculBarMoyen(false);
+                yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name} tried to use {move.Base.Name} but got the math wrong!");
+                yield break; // Skip the attack
             }
         }
-        else
+
+        // If the answer is right or if it's the enemy's turn, perform the attack
+        dialogBox.SetDialog($"{sourceUnit.Pokemon.Base.Name} uses {move.Base.Name}!");
+        sourceUnit.PlayAttackAnimation();
+        yield return new WaitForSeconds(1f);
+
+        var damageDetails = targetUnit.Pokemon.TakeDamage(move, sourceUnit.Pokemon);
+        yield return targetUnit.Hud.UpdateHP();
+
+        if (targetUnit.Pokemon.HP <= 0)
         {
-            sourceUnit.PlayAttackAnimation();
-            yield return new WaitForSeconds(1f);
-            targetUnit.PlayHitAnimation();
-
-
-            var damageDetails = targetUnit.Pokemon.TakeDamage(move, sourceUnit.Pokemon);
-            yield return targetUnit.Hud.UpdateHP();
-
-
-            if (targetUnit.Pokemon.HP <= 0)
-            {
-                yield return HandlePokemonFainted(targetUnit);
-            }
-
+            yield return HandlePokemonFainted(targetUnit);
         }
-        /*
-                }
-                else
-                {
-                    yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name}'s attack missed");
-                }*/
     }
 
+    void ActivateCalculBar(string pokemonName, int moveIndex)
+    {
+        switch (pokemonName)
+        {
+            case "Additix":
+                if (moveIndex == 0) { dialogBox.EnableCalculBar(true); SetActiveGame("Simple"); }
+                else if (moveIndex == 1) { dialogBox.EnableCalculBarMoyen(true); SetActiveGame("Moyen"); }
+                else { dialogBox.EnableCalculBarDifficile(true); SetActiveGame("Difficile"); }
+                additionSimple.NextQuestion();
+                break;
+            case "Soustrix":
+                if (moveIndex == 0) { dialogBox.EnableCalculBarSoustra(true); SetActiveGame("soustractionSimple"); }
+                else if (moveIndex == 1) { dialogBox.EnableCalculBarSoustraMoyen(true); SetActiveGame("soustractionMoyen"); }
+                else { dialogBox.EnableCalculBarSoustraDifficile(true); SetActiveGame("soustractionDifficile"); }
+                soustractionSimple.NextQuestion();
+                break;
+            case "Multiplix":
+                if (moveIndex == 0) { dialogBox.EnableCalculBarMulti(true); SetActiveGame("multiplicationSimple"); }
+                else if (moveIndex == 1) { dialogBox.EnableCalculBarMultiMoyen(true); SetActiveGame("multiplicationMoyen"); }
+                else { dialogBox.EnableCalculBarMultiDifficile(true); SetActiveGame("multiplicationDifficile"); }
+                multiplicationSimple.NextQuestion();
+                break;
+            case "Dividix":
+                if (moveIndex == 0) { dialogBox.EnableCalculBarDivi(true); SetActiveGame("divisionSimple"); }
+                else if (moveIndex == 1) { dialogBox.EnableCalculBarDiviMoyen(true); SetActiveGame("divisionMoyen"); }
+                else { dialogBox.EnableCalculBarDiviDifficile(true); SetActiveGame("divisionDifficile"); }
+                divisionSimple.NextQuestion();
+                break;
+        }
+    }
 
 
 
