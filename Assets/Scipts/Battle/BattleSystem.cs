@@ -18,6 +18,26 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] Image trainerImage;
     [SerializeField] GameObject pokeballSprite;
 
+    [SerializeField] private AdditionSimple additionSimple;
+    [SerializeField] private AdditionMoyen additionMoyen;
+    [SerializeField] private AdditionDifficile additionDifficile;
+
+
+    [SerializeField] private SoustractionSimple soustractionSimple;
+    [SerializeField] private SoustractionMoyen soustractionMoyen;
+    [SerializeField] private SoustractionDifficile soustractionDifficile;
+
+
+    [SerializeField] private MultiplicationSimple multiplicationSimple;
+    [SerializeField] private MultiplicationMoyen multiplicationMoyen;
+    [SerializeField] private MultiplicationDifficile multiplicationDifficile;
+
+
+    [SerializeField] private DivisionSimple divisionSimple;
+    [SerializeField] private DivisionMoyen divisionMoyen;
+    [SerializeField] private DivisionDifficile divisionDifficile;
+
+
     public event Action<bool> OnBattleOver;
 
     BattleState state;
@@ -26,6 +46,10 @@ public class BattleSystem : MonoBehaviour
     int currentMove;
     int currentMember;
     bool aboutToUseChoice = true;
+    private MonoBehaviour activeGame;
+    bool lastAnswerWasCorrect = false;
+
+
 
     PokemonParty playerParty;
     PokemonParty trainerParty;
@@ -99,6 +123,75 @@ public class BattleSystem : MonoBehaviour
         ActionSelection();  // Properly initiate action selection
     }
 
+    public void SetActiveGame(string gameType)
+    {
+        if (gameType == "Simple")
+            activeGame = additionSimple;
+        else if (gameType == "Moyen")
+            activeGame = additionMoyen;
+        else if (gameType == "Difficile")
+            activeGame = additionDifficile;
+        ///////////////////////////////////
+        else if (gameType == "soustractionSimple")
+            activeGame = soustractionSimple;
+        else if (gameType == "soustractionMoyen")
+            activeGame = soustractionMoyen;
+        else if (gameType == "soustractionDifficile")
+            activeGame = soustractionDifficile;
+        ///////////////////////////////////
+        else if (gameType == "multiplicationSimple")
+            activeGame = multiplicationSimple;
+        else if (gameType == "multiplicationMoyen")
+            activeGame = multiplicationMoyen;
+        else if (gameType == "multiplicationDifficile")
+            activeGame = multiplicationDifficile;
+        //////////////////////////////////////
+        else if (gameType == "divisionSimple")
+            activeGame = divisionSimple;
+        else if (gameType == "divisionMoyen")
+            activeGame = divisionMoyen;
+        else if (gameType == "divisionDifficile")
+            activeGame = divisionDifficile;
+    }
+
+
+    public void OnAnswerSubmitted()
+    {
+       
+
+        if (activeGame == additionSimple)
+            lastAnswerWasCorrect = additionSimple.AnswerQuestion();
+        else if (activeGame == additionMoyen)
+            lastAnswerWasCorrect = additionMoyen.AnswerQuestion();
+        else if (activeGame == additionDifficile)
+            lastAnswerWasCorrect = additionDifficile.AnswerQuestion();
+        //////////////////////////////////////
+
+        if (activeGame == soustractionSimple)
+            lastAnswerWasCorrect = soustractionSimple.AnswerQuestion();
+        else if (activeGame == soustractionMoyen)
+            lastAnswerWasCorrect = soustractionMoyen.AnswerQuestion();
+        else if (activeGame == soustractionDifficile)
+            lastAnswerWasCorrect = soustractionDifficile.AnswerQuestion();
+        //////////////////////////////////////
+
+        if (activeGame == multiplicationSimple)
+            lastAnswerWasCorrect = multiplicationSimple.AnswerQuestion();
+        else if (activeGame == multiplicationMoyen)
+            lastAnswerWasCorrect = multiplicationMoyen.AnswerQuestion();
+        else if (activeGame == multiplicationDifficile)
+            lastAnswerWasCorrect = multiplicationDifficile.AnswerQuestion();
+        //////////////////////////////////////
+
+        if (activeGame == divisionSimple)
+            lastAnswerWasCorrect = divisionSimple.AnswerQuestion();
+        else if (activeGame == divisionMoyen)
+            lastAnswerWasCorrect = divisionMoyen.AnswerQuestion();
+        else if (activeGame == divisionDifficile)
+            lastAnswerWasCorrect = divisionDifficile.AnswerQuestion();
+
+    }
+
 
     void BattleOver(bool won)
     {
@@ -163,7 +256,7 @@ public class BattleSystem : MonoBehaviour
 
             // Check who goes first
             bool playerGoesFirst = true;
-                playerGoesFirst = playerUnit.Pokemon.Speed >= enemyUnit.Pokemon.Speed;
+            playerGoesFirst = playerUnit.Pokemon.Speed >= enemyUnit.Pokemon.Speed;
 
             var firstUnit = (playerGoesFirst) ? playerUnit : enemyUnit;
             var secondUnit = (playerGoesFirst) ? enemyUnit : playerUnit;
@@ -204,7 +297,7 @@ public class BattleSystem : MonoBehaviour
             // Enemy Turn
             var enemyMove = enemyUnit.Pokemon.GetRandomMove();
             yield return RunMove(enemyUnit, playerUnit, enemyMove);
-           // yield return RunAfterTurn(enemyUnit);
+            // yield return RunAfterTurn(enemyUnit);
             if (state == BattleState.BattleOver) yield break;
         }
 
@@ -214,13 +307,40 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move move)
     {
-       
 
+        Masquer();
         yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name} used {move.Base.Name}");
         /*
         if (CheckIfMoveHits(move, sourceUnit.Pokemon, targetUnit.Pokemon))
         {*/
 
+        if (sourceUnit.IsPlayerUnit)
+        {
+            if (LastAnswerWasCorrect == true)
+            {
+                sourceUnit.PlayAttackAnimation();
+                yield return new WaitForSeconds(1f);
+                targetUnit.PlayHitAnimation();
+
+
+                var damageDetails = targetUnit.Pokemon.TakeDamage(move, sourceUnit.Pokemon);
+                yield return targetUnit.Hud.UpdateHP();
+
+
+                if (targetUnit.Pokemon.HP <= 0)
+                {
+                    yield return HandlePokemonFainted(targetUnit);
+                }
+            }
+            else
+            {
+                yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name} a loupé {move.Base.Name}");
+                dialogBox.EnableCalculBar(false);
+                dialogBox.EnableCalculBarMoyen(false);
+            }
+        }
+        else
+        {
             sourceUnit.PlayAttackAnimation();
             yield return new WaitForSeconds(1f);
             targetUnit.PlayHitAnimation();
@@ -228,25 +348,27 @@ public class BattleSystem : MonoBehaviour
 
             var damageDetails = targetUnit.Pokemon.TakeDamage(move, sourceUnit.Pokemon);
             yield return targetUnit.Hud.UpdateHP();
-            
+
 
             if (targetUnit.Pokemon.HP <= 0)
             {
                 yield return HandlePokemonFainted(targetUnit);
             }
-/*
+
         }
-        else
-        {
-            yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name}'s attack missed");
-        }*/
+        /*
+                }
+                else
+                {
+                    yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name}'s attack missed");
+                }*/
     }
 
-    
 
 
 
-    
+
+
 
     IEnumerator HandlePokemonFainted(BattleUnit faintedUnit)
     {
@@ -436,8 +558,106 @@ public class BattleSystem : MonoBehaviour
 
             dialogBox.EnableMoveSelector(false);
             dialogBox.EnableDialogText(true);
+
+            if (playerUnit.Pokemon.Base.Name == "Additix")
+            {
+                if (currentMove == 0)
+                {
+                    dialogBox.EnableCalculBar(true);
+                    SetActiveGame("Simple");
+                    additionSimple.NextQuestion();
+
+                }
+                else if (currentMove == 1)
+                {
+                    dialogBox.EnableCalculBarMoyen(true);
+                    SetActiveGame("Moyen");
+                    additionMoyen.NextQuestion();
+
+                }
+                else
+                {
+                    dialogBox.EnableCalculBarDifficile(true);
+                    SetActiveGame("Difficile");
+                    additionDifficile.NextQuestion();
+                }
+
+            }
+            else if (playerUnit.Pokemon.Base.Name == "Soustrix")
+            {
+                if (currentMove == 0)
+                {
+                    dialogBox.EnableCalculBarSoustra(true);
+                    SetActiveGame("soustractionSimple");
+                    soustractionSimple.NextQuestion();
+
+                }
+                else if (currentMove == 1)
+                {
+                    dialogBox.EnableCalculBarSoustraMoyen(true);
+                    SetActiveGame("soustractionMoyen");
+                    soustractionMoyen.NextQuestion();
+
+                }
+                else
+                {
+                    dialogBox.EnableCalculBarSoustraDifficile(true);
+                    SetActiveGame("soustractionDifficile");
+                    soustractionDifficile.NextQuestion();
+                }
+
+            }
+            if (playerUnit.Pokemon.Base.Name == "Multiplix")
+            {
+                if (currentMove == 0)
+                {
+                    dialogBox.EnableCalculBarMulti(true);
+                    SetActiveGame("multiplicationSimple");
+                    multiplicationSimple.NextQuestion();
+
+                }
+                else if (currentMove == 1)
+                {
+                    dialogBox.EnableCalculBarMultiMoyen(true);
+                    SetActiveGame("multiplicationMoyen");
+                    multiplicationMoyen.NextQuestion();
+
+                }
+                else
+                {
+                    dialogBox.EnableCalculBarMultiDifficile(true);
+                    SetActiveGame("multiplicationDifficile");
+                    multiplicationDifficile.NextQuestion();
+                }
+
+            }
+            if (playerUnit.Pokemon.Base.Name == "Dividix")
+            {
+                if (currentMove == 0)
+                {
+                    dialogBox.EnableCalculBarDivi(true);
+                    SetActiveGame("divisionSimple");
+                    divisionSimple.NextQuestion();
+
+                }
+                else if (currentMove == 1)
+                {
+                    dialogBox.EnableCalculBarDiviMoyen(true);
+                    SetActiveGame("divisionMoyen");
+                    divisionMoyen.NextQuestion();
+
+                }
+                else
+                {
+                    dialogBox.EnableCalculBarDiviDifficile(true);
+                    SetActiveGame("divisionDifficile");
+                    divisionDifficile.NextQuestion();
+                }
+            }
             StartCoroutine(RunTurns(BattleAction.Move));
+
         }
+
         else if (Input.GetKeyDown(KeyCode.X))
         {
             dialogBox.EnableMoveSelector(false);
@@ -692,6 +912,30 @@ public class BattleSystem : MonoBehaviour
                 yield return dialogBox.TypeDialog($"Can't escape!");
                 state = BattleState.RunningTurn;
             }
+        }
+
+
+        void Masquer()
+        {
+            dialogBox.EnableCalculBar(false);
+            dialogBox.EnableCalculBarMoyen(false);
+            dialogBox.EnableCalculBarDifficile(false);
+
+            dialogBox.EnableCalculBarSoustra(false);
+            dialogBox.EnableCalculBarSoustraMoyen(false);
+            dialogBox.EnableCalculBarSoustraDifficile(false);
+
+            dialogBox.EnableCalculBarMulti(false);
+            dialogBox.EnableCalculBarMultiMoyen(false);
+            dialogBox.EnableCalculBarMultiDifficile(false);
+
+            dialogBox.EnableCalculBarDivi(false);
+            dialogBox.EnableCalculBarDiviMoyen(false);
+            dialogBox.EnableCalculBarDiviDifficile(false);
+
+
+
+
         }
     }
 }
