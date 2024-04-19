@@ -157,7 +157,7 @@ public class BattleSystem : MonoBehaviour
 
     public void OnAnswerSubmitted()
     {
-       
+
 
         if (activeGame == additionSimple)
             lastAnswerWasCorrect = additionSimple.AnswerQuestion();
@@ -915,7 +915,7 @@ public class BattleSystem : MonoBehaviour
         }
 
 
-        
+
     }
 
     void test()
