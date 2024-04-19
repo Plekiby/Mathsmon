@@ -308,7 +308,7 @@ public class BattleSystem : MonoBehaviour
     IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move move)
     {
 
-        Masquer();
+        test();
         yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name} used {move.Base.Name}");
         /*
         if (CheckIfMoveHits(move, sourceUnit.Pokemon, targetUnit.Pokemon))
@@ -316,7 +316,7 @@ public class BattleSystem : MonoBehaviour
 
         if (sourceUnit.IsPlayerUnit)
         {
-            if (LastAnswerWasCorrect == true)
+            if (lastAnswerWasCorrect == true)
             {
                 sourceUnit.PlayAttackAnimation();
                 yield return new WaitForSeconds(1f);
@@ -915,27 +915,29 @@ public class BattleSystem : MonoBehaviour
         }
 
 
-        void Masquer()
-        {
-            dialogBox.EnableCalculBar(false);
-            dialogBox.EnableCalculBarMoyen(false);
-            dialogBox.EnableCalculBarDifficile(false);
+        
+    }
 
-            dialogBox.EnableCalculBarSoustra(false);
-            dialogBox.EnableCalculBarSoustraMoyen(false);
-            dialogBox.EnableCalculBarSoustraDifficile(false);
+    void test()
+    {
+        dialogBox.EnableCalculBar(false);
+        dialogBox.EnableCalculBarMoyen(false);
+        dialogBox.EnableCalculBarDifficile(false);
 
-            dialogBox.EnableCalculBarMulti(false);
-            dialogBox.EnableCalculBarMultiMoyen(false);
-            dialogBox.EnableCalculBarMultiDifficile(false);
+        dialogBox.EnableCalculBarSoustra(false);
+        dialogBox.EnableCalculBarSoustraMoyen(false);
+        dialogBox.EnableCalculBarSoustraDifficile(false);
 
-            dialogBox.EnableCalculBarDivi(false);
-            dialogBox.EnableCalculBarDiviMoyen(false);
-            dialogBox.EnableCalculBarDiviDifficile(false);
+        dialogBox.EnableCalculBarMulti(false);
+        dialogBox.EnableCalculBarMultiMoyen(false);
+        dialogBox.EnableCalculBarMultiDifficile(false);
+
+        dialogBox.EnableCalculBarDivi(false);
+        dialogBox.EnableCalculBarDiviMoyen(false);
+        dialogBox.EnableCalculBarDiviDifficile(false);
 
 
 
 
-        }
     }
 }

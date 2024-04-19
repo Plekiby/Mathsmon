@@ -17,6 +17,23 @@ public class BattleDialogBox : MonoBehaviour
     [SerializeField] List<Text> actionTexts;
     [SerializeField] List<Text> moveTexts;
 
+    [SerializeField] GameObject calculBar;
+    [SerializeField] GameObject calculBarMoyen;
+    [SerializeField] GameObject calculBarDifficile;
+
+    [SerializeField] GameObject calculBarSoutraction;
+    [SerializeField] GameObject calculBarSoutraMoyen;
+    [SerializeField] GameObject calculBarSoutraDifficile;
+
+
+    [SerializeField] GameObject calculBarMulti;
+    [SerializeField] GameObject calculBarMultiMoyen;
+    [SerializeField] GameObject calculBarMultiDifficile;
+
+
+    [SerializeField] GameObject calculBarDivi;
+    [SerializeField] GameObject calculBarDiviMoyen;
+    [SerializeField] GameObject calculBarDiviDifficile;
 
     [SerializeField] Text yesText;
     [SerializeField] Text noText;
