@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5aa4a7f37a22714c9924381e9ade610, type: 3}
-  m_Name: Pokemon
+  m_Name: Soustrix
   m_EditorClassIdentifier: 
-  name: 
+  name: Soustrix
   frontSprite: {fileID: 0}
   backSprite: {fileID: 0}
-  type1: 0
-  maxHp: 0
-  attack: 0
-  defense: 0
-  speed: 0
+  type1: 2
+  maxHp: 39
+  attack: 52
+  defense: 43
+  speed: 60
   learnableMoves:
-  - moveBase: {fileID: 0}
+  - moveBase: {fileID: 11400000, guid: 2b34e6b329052214baeee3f387e14c60, type: 2}
     level: 1
-  - moveBase: {fileID: 0}
+  - moveBase: {fileID: 11400000, guid: 3b0f6d959c787334bb0caa696d8e200d, type: 2}
     level: 4
-  - moveBase: {fileID: 0}
+  - moveBase: {fileID: 11400000, guid: dc85fe6a6f8115745ba8d859bbb5e900, type: 2}
     level: 7
