@@ -9,16 +9,22 @@ public class GameLayers : MonoBehaviour
     [SerializeField] LayerMask grassLayer;
     [SerializeField] LayerMask playerLayer;
     [SerializeField] LayerMask fovLayer;
+    [SerializeField] LayerMask triggerableLayers;
+
+    
 
     public static GameLayers i { get; set; }
     private void Awake()
     {
         i = this;
     }
-
     public LayerMask SolidLayer
     {
         get => solidObjectsLayer;
+    }
+    public LayerMask TriggerableLayers
+    {
+        get => triggerableLayers;
     }
 
     public LayerMask InteractableLayer

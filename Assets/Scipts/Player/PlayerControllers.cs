@@ -28,42 +28,47 @@ public class PlayerControllers : MonoBehaviour
 
     private void Awake()
     {
+        character = GetComponent<Character>();
         animator = GetComponent<Animator>();  // Initialisation du composant Animator
+
     }
 
     public void HandleUpdate()
     {
-        if (!isMoving)
+        if (!character.IsMoving)
         {
             input.x = Input.GetAxisRaw("Horizontal");
             input.y = Input.GetAxisRaw("Vertical");
 
-            // Éviter le mouvement diagonal
+            // remove diagonal movement
             if (input.x != 0) input.y = 0;
 
             if (input != Vector2.zero)
             {
-                // Configuration de l'animation en fonction du mouvement
-                animator.SetFloat("moveX", input.x);
-                animator.SetFloat("moveY", input.y);
-
-                Vector3 targetPos = transform.position;
-                targetPos.x += input.x;
-                targetPos.y += input.y;
-
-                // Démarrage de la coroutine de mouvement si la cible est accessible
-                if (IsWalkable(targetPos))
-                {
-                    StartCoroutine(Move(targetPos));
-                }
+                StartCoroutine(character.Move(input, OnMoveOver));
             }
         }
 
-        animator.SetBool("isMoving", isMoving);
+        character.HandleUpdate();
 
-        // Interaction avec les objets ou personnages
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Z))
             Interact();
+    }
+
+    private void OnMoveOver()
+    {
+        var colliders = Physics2D.OverlapCircleAll(transform.position - new Vector3(0, character.OffsetY), 0.2f, GameLayers.i.TriggerableLayers);
+
+        foreach (var collider in colliders)
+        {
+            var triggerable = collider.GetComponent<IPlayerTriggerable>();
+            if (triggerable != null)
+            {
+                character.Animator.IsMoving = false;
+                triggerable.OnPlayerTriggered(this);
+                break;
+            }
+        }
     }
 
     private IEnumerator Move(Vector3 targetPos)
