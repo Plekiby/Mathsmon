@@ -19,6 +19,7 @@ public class PlayerControllers : MonoBehaviour
 
     public event Action OnEncountered;   // Déclenché lors de rencontres aléatoires
     public event Action<Collider2D> OnEnterTrainersView;  // Déclenché lorsque le joueur entre dans le champ de vision d'un dresseur
+    private Character character;
 
     private bool isMoving;
     private int nbMathsball = 1; 
@@ -144,5 +145,8 @@ public class PlayerControllers : MonoBehaviour
     {
         nbMathsball++;
     }
+
+    public Character Character => character;
+
 }
 
