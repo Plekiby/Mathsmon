@@ -8,38 +8,41 @@ using UnityEngine;
 
 public class PlayerControllers : MonoBehaviour
 {
-    [SerializeField] private string playerName;
-    [SerializeField] private Sprite playerSprite;
+    [SerializeField] private string playerName;  // Nom du personnage joueur
+    [SerializeField] private Sprite playerSprite;  // Sprite du personnage joueur
 
     public float moveSpeed = 5.0f;
-    public LayerMask solidObjectsLayer;
-    public LayerMask interactableLayer;
-    public LayerMask grassLayer;
-    public LayerMask fovLayer;
+    public LayerMask solidObjectsLayer;  
+    public LayerMask interactableLayer;  
+    public LayerMask grassLayer;        
+    public LayerMask fovLayer;           
 
-    public event Action OnEncountered;
-    public event Action<Collider2D> OnEnterTrainersView;
+    public event Action OnEncountered;   // Déclenché lors de rencontres aléatoires
+    public event Action<Collider2D> OnEnterTrainersView;  // Déclenché lorsque le joueur entre dans le champ de vision d'un dresseur
 
     private bool isMoving;
-    private Vector2 input;
-    private Animator animator;
+    private int nbMathsball = 1; 
+    private Vector2 input;  
+    private Animator animator;  // Composant pour contrôler les animations
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();  // Initialisation du composant Animator
     }
 
     public void HandleUpdate()
     {
-        if (!isMoving )
+        if (!isMoving)
         {
             input.x = Input.GetAxisRaw("Horizontal");
             input.y = Input.GetAxisRaw("Vertical");
 
+            // Éviter le mouvement diagonal
             if (input.x != 0) input.y = 0;
 
             if (input != Vector2.zero)
             {
+                // Configuration de l'animation en fonction du mouvement
                 animator.SetFloat("moveX", input.x);
                 animator.SetFloat("moveY", input.y);
 
@@ -47,6 +50,7 @@ public class PlayerControllers : MonoBehaviour
                 targetPos.x += input.x;
                 targetPos.y += input.y;
 
+                // Démarrage de la coroutine de mouvement si la cible est accessible
                 if (IsWalkable(targetPos))
                 {
                     StartCoroutine(Move(targetPos));
@@ -56,7 +60,8 @@ public class PlayerControllers : MonoBehaviour
 
         animator.SetBool("isMoving", isMoving);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        // Interaction avec les objets ou personnages
+        if (Input.GetKeyDown(KeyCode.E))
             Interact();
     }
 
@@ -64,6 +69,7 @@ public class PlayerControllers : MonoBehaviour
     {
         isMoving = true;
 
+        // Déplacement progressif vers la position cible
         while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
@@ -73,12 +79,14 @@ public class PlayerControllers : MonoBehaviour
         transform.position = targetPos;
         isMoving = false;
 
+        // Vérification des rencontres et si le joueur est vu par un dresseur
         CheckForEncounters();
         CheckIfInTrainersView();
     }
 
     private bool IsWalkable(Vector3 targetPos)
     {
+        // Vérifie si la position cible n'est pas bloquée par des objets solides ou interactifs
         return Physics2D.OverlapCircle(targetPos, 0.1f, solidObjectsLayer | interactableLayer) == null;
     }
 
@@ -90,12 +98,14 @@ public class PlayerControllers : MonoBehaviour
         Collider2D collider = Physics2D.OverlapCircle(interactPos, 0.3f, interactableLayer);
         if (collider != null)
         {
+            // Déclenchement de l'interaction
             collider.GetComponent<Interactable>()?.Interact(transform);
         }
     }
 
     private void CheckForEncounters()
     {
+        // Déclenche une rencontre si le joueur marche sur de l'herbe
         if (Physics2D.OverlapCircle(transform.position, 0.2f, grassLayer) != null && UnityEngine.Random.Range(1, 101) <= 10)
         {
             OnEncountered?.Invoke();
@@ -104,6 +114,7 @@ public class PlayerControllers : MonoBehaviour
 
     private void CheckIfInTrainersView()
     {
+        // Déclenche un événement si un dresseur voit le joueur
         Collider2D collider = Physics2D.OverlapCircle(transform.position, 0.2f, fovLayer);
         if (collider != null)
         {
@@ -113,4 +124,25 @@ public class PlayerControllers : MonoBehaviour
 
     public string Name => playerName;
     public Sprite Sprite => playerSprite;
+
+    public int getNbMathsball()
+    {
+        return nbMathsball;
+    }
+
+    public void setNbMathsball(int nb)
+    {
+        nbMathsball = nb;
+    }
+
+    public void NbMathsballm()
+    {
+        nbMathsball--;
+    }
+
+    public void NbMathsballp()
+    {
+        nbMathsball++;
+    }
 }
+

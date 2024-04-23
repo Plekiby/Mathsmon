@@ -10,6 +10,8 @@ public enum BattleAction { Move, SwitchPokemon, UseItem, Run }
 
 public class BattleSystem : MonoBehaviour
 {
+    // Déclarations des composants et variables nécessaires
+    // Des composants sérialisés pour permettre une configuration facile via l'éditeur Unity
     [SerializeField] BattleUnit playerUnit;
     [SerializeField] BattleUnit enemyUnit;
     [SerializeField] BattleDialogBox dialogBox;
@@ -18,49 +20,42 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] Image trainerImage;
     [SerializeField] GameObject pokeballSprite;
 
+    // Jeux de mathématiques pour différents niveaux de difficulté
     [SerializeField] private AdditionSimple additionSimple;
     [SerializeField] private AdditionMoyen additionMoyen;
     [SerializeField] private AdditionDifficile additionDifficile;
-
-
     [SerializeField] private SoustractionSimple soustractionSimple;
     [SerializeField] private SoustractionMoyen soustractionMoyen;
     [SerializeField] private SoustractionDifficile soustractionDifficile;
-
-
     [SerializeField] private MultiplicationSimple multiplicationSimple;
     [SerializeField] private MultiplicationMoyen multiplicationMoyen;
     [SerializeField] private MultiplicationDifficile multiplicationDifficile;
-
-
     [SerializeField] private DivisionSimple divisionSimple;
     [SerializeField] private DivisionMoyen divisionMoyen;
     [SerializeField] private DivisionDifficile divisionDifficile;
 
-
     public event Action<bool> OnBattleOver;
 
-    BattleState state;
-    BattleState? prevState;
-    int currentAction;
-    int currentMove;
-    int currentMember;
-    bool aboutToUseChoice = true;
+    private BattleState state;
+    private BattleState? prevState;
+    private int currentAction;
+    private int currentMove;
+    private int currentMember;
+    private bool aboutToUseChoice = true;
     private MonoBehaviour activeGame;
-    bool lastAnswerWasCorrect = false;
+    private bool lastAnswerWasCorrect = false;
 
+    private PokemonParty playerParty;
+    private PokemonParty trainerParty;
+    private Pokemon wildPokemon;
 
+    private bool isTrainerBattle = false;
+    private PlayerControllers player;
+    private TrainerController trainer;
 
-    PokemonParty playerParty;
-    PokemonParty trainerParty;
-    Pokemon wildPokemon;
+    private int escapeAttempts;
 
-    bool isTrainerBattle = false;
-    PlayerControllers player;
-    TrainerController trainer;
-
-    int escapeAttempts;
-
+    // Commence une bataille contre un Pokémon sauvage
     public void StartBattle(PokemonParty playerParty, Pokemon wildPokemon)
     {
         this.playerParty = playerParty;
@@ -71,11 +66,11 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(SetupBattle());
     }
 
+    // Commence une bataille contre un dresseur
     public void StartTrainerBattle(PokemonParty playerParty, PokemonParty trainerParty)
     {
         this.playerParty = playerParty;
         this.trainerParty = trainerParty;
-
         isTrainerBattle = true;
         player = playerParty.GetComponent<PlayerControllers>();
         trainer = trainerParty.GetComponent<TrainerController>();
@@ -83,6 +78,7 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(SetupBattle());
     }
 
+    // Configuration initiale de la bataille
     public IEnumerator SetupBattle()
     {
         playerUnit.Clear();
@@ -93,7 +89,7 @@ public class BattleSystem : MonoBehaviour
             playerUnit.Setup(playerParty.GetHealthyPokemon());
             enemyUnit.Setup(wildPokemon);
             dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
-            yield return dialogBox.TypeDialog($"A wild {enemyUnit.Pokemon.Base.Name} appeared.");
+            yield return dialogBox.TypeDialog($"Un {enemyUnit.Pokemon.Base.Name} sauvage apparaît.");
         }
         else
         {
@@ -101,128 +97,136 @@ public class BattleSystem : MonoBehaviour
             trainerImage.gameObject.SetActive(true);
             playerImage.sprite = player.Sprite;
             trainerImage.sprite = trainer.Sprite;
-            yield return dialogBox.TypeDialog($"{trainer.Name} wants to battle");
+            yield return dialogBox.TypeDialog($"{trainer.Name} veut combattre.");
 
             trainerImage.gameObject.SetActive(false);
             enemyUnit.gameObject.SetActive(true);
             var enemyPokemon = trainerParty.GetHealthyPokemon();
             enemyUnit.Setup(enemyPokemon);
-            yield return dialogBox.TypeDialog($"{trainer.Name} send out {enemyPokemon.Base.Name}");
+            yield return dialogBox.TypeDialog($"{trainer.Name} envoie {enemyPokemon.Base.Name}.");
 
             playerImage.gameObject.SetActive(false);
             playerUnit.gameObject.SetActive(true);
             var playerPokemon = playerParty.GetHealthyPokemon();
             playerUnit.Setup(playerPokemon);
-            yield return dialogBox.TypeDialog($"Go {playerPokemon.Base.Name}!");
+            yield return dialogBox.TypeDialog($"Vas-y {playerPokemon.Base.Name} !");
             dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
         }
 
         escapeAttempts = 0;
         partyScreen.Init();
-        yield return new WaitForSeconds(1);  // Ensure all dialogues are completed
-        ActionSelection();  // Properly initiate action selection
+        yield return new WaitForSeconds(1);  // Assurez-vous que tous les dialogues sont terminés
+        ActionSelection();  // Initie correctement la sélection d'action
     }
 
+    // Définit le jeu actif basé sur le type de jeu choisi
     public void SetActiveGame(string gameType)
     {
-        if (gameType == "Simple")
-            activeGame = additionSimple;
-        else if (gameType == "Moyen")
-            activeGame = additionMoyen;
-        else if (gameType == "Difficile")
-            activeGame = additionDifficile;
-        ///////////////////////////////////
-        else if (gameType == "soustractionSimple")
-            activeGame = soustractionSimple;
-        else if (gameType == "soustractionMoyen")
-            activeGame = soustractionMoyen;
-        else if (gameType == "soustractionDifficile")
-            activeGame = soustractionDifficile;
-        ///////////////////////////////////
-        else if (gameType == "multiplicationSimple")
-            activeGame = multiplicationSimple;
-        else if (gameType == "multiplicationMoyen")
-            activeGame = multiplicationMoyen;
-        else if (gameType == "multiplicationDifficile")
-            activeGame = multiplicationDifficile;
-        //////////////////////////////////////
-        else if (gameType == "divisionSimple")
-            activeGame = divisionSimple;
-        else if (gameType == "divisionMoyen")
-            activeGame = divisionMoyen;
-        else if (gameType == "divisionDifficile")
-            activeGame = divisionDifficile;
+        // Association du type de jeu aux différentes instances de jeux de mathématiques
+        switch (gameType)
+        {
+            case "Simple":
+                activeGame = additionSimple;
+                break;
+            case "Moyen":
+                activeGame = additionMoyen;
+                break;
+            case "Difficile":
+                activeGame = additionDifficile;
+                break;
+            case "soustractionSimple":
+                activeGame = soustractionSimple;
+                break;
+            case "soustractionMoyen":
+                activeGame = soustractionMoyen;
+                break;
+            case "soustractionDifficile":
+                activeGame = soustractionDifficile;
+                break;
+            case "multiplicationSimple":
+                activeGame = multiplicationSimple;
+                break;
+            case "multiplicationMoyen":
+                activeGame = multiplicationMoyen;
+                break;
+            case "multiplicationDifficile":
+                activeGame = multiplicationDifficile;
+                break;
+            case "divisionSimple":
+                activeGame = divisionSimple;
+                break;
+            case "divisionMoyen":
+                activeGame = divisionMoyen;
+                break;
+            case "divisionDifficile":
+                activeGame = divisionDifficile;
+                break;
+        }
     }
 
-
+    // Traite la réponse du joueur lorsqu'il soumet une réponse à un jeu de mathématiques
     public void OnAnswerSubmitted()
     {
-
-
         if (activeGame == additionSimple)
             lastAnswerWasCorrect = additionSimple.AnswerQuestion();
         else if (activeGame == additionMoyen)
             lastAnswerWasCorrect = additionMoyen.AnswerQuestion();
         else if (activeGame == additionDifficile)
             lastAnswerWasCorrect = additionDifficile.AnswerQuestion();
-        //////////////////////////////////////
-
-        if (activeGame == soustractionSimple)
+        else if (activeGame == soustractionSimple)
             lastAnswerWasCorrect = soustractionSimple.AnswerQuestion();
         else if (activeGame == soustractionMoyen)
             lastAnswerWasCorrect = soustractionMoyen.AnswerQuestion();
         else if (activeGame == soustractionDifficile)
             lastAnswerWasCorrect = soustractionDifficile.AnswerQuestion();
-        //////////////////////////////////////
-
-        if (activeGame == multiplicationSimple)
+        else if (activeGame == multiplicationSimple)
             lastAnswerWasCorrect = multiplicationSimple.AnswerQuestion();
         else if (activeGame == multiplicationMoyen)
             lastAnswerWasCorrect = multiplicationMoyen.AnswerQuestion();
         else if (activeGame == multiplicationDifficile)
             lastAnswerWasCorrect = multiplicationDifficile.AnswerQuestion();
-        //////////////////////////////////////
-
-        if (activeGame == divisionSimple)
+        else if (activeGame == divisionSimple)
             lastAnswerWasCorrect = divisionSimple.AnswerQuestion();
         else if (activeGame == divisionMoyen)
             lastAnswerWasCorrect = divisionMoyen.AnswerQuestion();
         else if (activeGame == divisionDifficile)
             lastAnswerWasCorrect = divisionDifficile.AnswerQuestion();
-
     }
 
-
+    // Termine la bataille et notifie si le joueur a gagné ou perdu
     void BattleOver(bool won)
     {
         state = BattleState.BattleOver;
         playerParty.Pokemons.ForEach(p => p.OnBattleOver());
-        OnBattleOver(won);
+        OnBattleOver?.Invoke(won);
     }
 
+    // Initie la sélection d'action
     void ActionSelection()
     {
         if (state != BattleState.AboutToUse && state != BattleState.PartyScreen && state != BattleState.MoveSelection)
         {
-            Debug.Log("Entering ActionSelection State");
+            Debug.Log("Entrée dans l'état de sélection d'action");
             state = BattleState.ActionSelection;
-            dialogBox.SetDialog("Choose an action");
+            dialogBox.SetDialog("Choisissez une action");
             dialogBox.EnableActionSelector(true);
         }
         else
         {
-            Debug.LogError("Attempted to enter ActionSelection incorrectly from " + state.ToString());
+            Debug.LogError("Tentative incorrecte d'entrer dans la sélection d'action depuis " + state.ToString());
         }
     }
 
+    // Ouvre l'écran de sélection du groupe de Pokémon
     void OpenPartyScreen()
     {
-        prevState = state;  // Store the current state to return after party selection
+        prevState = state;  // Mémorise l'état actuel pour y retourner après la sélection
         state = BattleState.PartyScreen;
         partyScreen.SetPartyData(playerParty.Pokemons);
         partyScreen.gameObject.SetActive(true);
     }
 
+    // Initie la sélection de mouvement
     void MoveSelection()
     {
         state = BattleState.MoveSelection;
@@ -231,20 +235,22 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnableMoveSelector(true);
     }
 
+    // Gère le moment où le dresseur adverse s'apprête à utiliser un nouveau Pokémon
     IEnumerator AboutToUse(Pokemon newPokemon)
     {
-        yield return dialogBox.TypeDialog($"{trainer.Name} is about to use {newPokemon.Base.Name}. Do you want to change pokemon?");
+        yield return dialogBox.TypeDialog($"{trainer.Name} s'apprête à utiliser {newPokemon.Base.Name}. Voulez-vous changer de Pokémon ?");
         dialogBox.EnableChoiceBox(true);
 
         state = BattleState.AboutToUse;
         while (state == BattleState.AboutToUse)
         {
-            yield return null; // Wait here until a choice is made
+            yield return null; // Attend ici jusqu'à ce qu'un choix soit fait
         }
 
         dialogBox.EnableChoiceBox(false);
     }
 
+    // Exécute les tours en fonction de l'action choisie par le joueur
     IEnumerator RunTurns(BattleAction playerAction)
     {
         state = BattleState.RunningTurn;
@@ -254,7 +260,7 @@ public class BattleSystem : MonoBehaviour
             playerUnit.Pokemon.CurrentMove = playerUnit.Pokemon.Moves[currentMove];
             enemyUnit.Pokemon.CurrentMove = enemyUnit.Pokemon.GetRandomMove();
 
-            // Check who goes first
+            // Vérifie qui commence
             bool playerGoesFirst = true;
             playerGoesFirst = playerUnit.Pokemon.Speed >= enemyUnit.Pokemon.Speed;
 
@@ -263,16 +269,14 @@ public class BattleSystem : MonoBehaviour
 
             var secondPokemon = secondUnit.Pokemon;
 
-            // First Turn
+            // Premier tour
             yield return RunMove(firstUnit, secondUnit, firstUnit.Pokemon.CurrentMove);
-            //yield return RunAfterTurn(firstUnit);
             if (state == BattleState.BattleOver) yield break;
 
             if (secondPokemon.HP > 0)
             {
-                // Second Turn
+                // Deuxième tour
                 yield return RunMove(secondUnit, firstUnit, secondUnit.Pokemon.CurrentMove);
-                //yield return RunAfterTurn(secondUnit);
                 if (state == BattleState.BattleOver) yield break;
             }
         }
@@ -287,17 +291,20 @@ public class BattleSystem : MonoBehaviour
             else if (playerAction == BattleAction.UseItem)
             {
                 dialogBox.EnableActionSelector(false);
-                yield return ThrowPokeball();
+                if (player.getNbMathsball() > 0)
+                {
+                    player.NbMathsballm();
+                    yield return ThrowPokeball();
+                }
             }
             else if (playerAction == BattleAction.Run)
             {
                 yield return TryToEscape();
             }
 
-            // Enemy Turn
+            // Tour de l'ennemi
             var enemyMove = enemyUnit.Pokemon.GetRandomMove();
             yield return RunMove(enemyUnit, playerUnit, enemyMove);
-            // yield return RunAfterTurn(enemyUnit);
             if (state == BattleState.BattleOver) yield break;
         }
 
@@ -305,32 +312,31 @@ public class BattleSystem : MonoBehaviour
             ActionSelection();
     }
 
-    
-
+    // Exécute un mouvement durant le tour
     IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move move)
     {
-        // Reset all calcul bars visibility
+        // Réinitialise toutes les barres de calcul
         test();
 
-        // Check if it's the player's turn and set up the correct game
+        // Vérifie si c'est le tour du joueur et configure le jeu correct
         if (sourceUnit.IsPlayerUnit)
         {
             ActivateCalculBar(playerUnit.Pokemon.Base.Name, currentMove);
-            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Return)); // Wait for player to press Enter
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Return)); // Attendez que le joueur appuie sur Entrée
 
-            OnAnswerSubmitted(); // Check the answer after submission
+            OnAnswerSubmitted(); // Vérifie la réponse après soumission
 
             test();
 
-            if (!lastAnswerWasCorrect) // If the answer is wrong, skip the attack
+            if (!lastAnswerWasCorrect) // Si la réponse est incorrecte, sautez l'attaque
             {
-                yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name} tried to use {move.Base.Name} but got the math wrong!");
-                yield break; // Skip the attack
+                yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name} a essayé d'utiliser {move.Base.Name} mais s'est trompé dans le calcul !");
+                yield break; // Sautez l'attaque
             }
         }
 
-        // If the answer is right or if it's the enemy's turn, perform the attack
-        dialogBox.SetDialog($"{sourceUnit.Pokemon.Base.Name} uses {move.Base.Name}!");
+        // Si la réponse est correcte ou si c'est le tour de l'ennemi, effectuez l'attaque
+        dialogBox.SetDialog($"{sourceUnit.Pokemon.Base.Name} utilise {move.Base.Name} !");
         sourceUnit.PlayAttackAnimation();
         yield return new WaitForSeconds(1f);
 
@@ -343,6 +349,7 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    // Active la barre de calcul en fonction du Pokémon et de l'indice du mouvement
     void ActivateCalculBar(string pokemonName, int moveIndex)
     {
         switch (pokemonName)
@@ -374,117 +381,88 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-
-
-
-
-
+    // Gère quand un Pokémon est mis K.O.
     IEnumerator HandlePokemonFainted(BattleUnit faintedUnit)
     {
-        yield return dialogBox.TypeDialog($"{faintedUnit.Pokemon.Base.Name} Fainted");
+        yield return dialogBox.TypeDialog($"{faintedUnit.Pokemon.Base.Name} est K.O.");
         faintedUnit.PlayFaintAnimation();
         yield return new WaitForSeconds(2f);
 
         if (faintedUnit.IsPlayerUnit)
         {
-            // Check for another player Pokémon to continue fighting
+            // Vérifiez s'il y a un autre Pokémon du joueur pour continuer à combattre
             var nextPokemon = playerParty.GetHealthyPokemon();
             if (nextPokemon != null)
-                OpenPartyScreen();  // prompt player to select another Pokémon
+                OpenPartyScreen();  // Demande au joueur de sélectionner un autre Pokémon
             else
-                BattleOver(false);  // no healthy Pokémon left
+                BattleOver(false);  // Plus de Pokémon en bonne santé, le joueur perd
         }
         else
         {
-            // Exp Gain
+            // Gain d'expérience
             int expGain = 1;
             playerUnit.Pokemon.GainWin();
-            yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name} gained {expGain} exp");
+            yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name} a gagné {expGain} d'exp");
             yield return playerUnit.Hud.SetExpSmooth();
 
-            // Check Level Up
+            // Vérification de la montée de niveau
             while (playerUnit.Pokemon.CheckForLevelUp())
             {
                 playerUnit.Hud.SetLevel();
-                yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name} grew to level {playerUnit.Pokemon.Level}");
+                yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name} monte au niveau {playerUnit.Pokemon.Level}");
 
                 yield return playerUnit.Hud.SetExpSmooth(true);
             }
 
             yield return new WaitForSeconds(1f);
 
-
-            // Enemy Pokémon fainted, check for next in line
+            // Le Pokémon ennemi est K.O., vérifiez s'il y en a un autre en ligne
             if (isTrainerBattle)
             {
                 var nextPokemon = trainerParty.GetHealthyPokemon();
                 if (nextPokemon != null)
-                    StartCoroutine(AboutToUse(nextPokemon));  // prompt about switching Pokémon
+                    StartCoroutine(AboutToUse(nextPokemon));  // Demande de changement de Pokémon
                 else
-                    BattleOver(true);  // no Pokémon left, player wins
+                    BattleOver(true);  // Plus de Pokémon, le joueur gagne
             }
             else
             {
-                BattleOver(true);  // wild Pokémon battle, automatically win
+                BattleOver(true);  // Combat contre un Pokémon sauvage, victoire automatique
             }
         }
     }
 
-
+    // Vérifie si la bataille est terminée après qu'un Pokémon soit mis K.O.
     void CheckForBattleOver(BattleUnit faintedUnit)
     {
-        /*if (faintedUnit.IsPlayerUnit)
-        {
-            var nextPokemon = playerParty.GetHealthyPokemon();
-            if (nextPokemon != null)
-                OpenPartyScreen();
-            else
-                BattleOver(false);
-        }
-        else
-        {
-            if (!isTrainerBattle)
-            {
-                BattleOver(true);
-            }
-            else
-            {
-                var nextPokemon = trainerParty.GetHealthyPokemon();
-                if (nextPokemon != null)
-                    StartCoroutine(AboutToUse(nextPokemon));
-                else
-                    BattleOver(true);
-            }
-        }*/
-
         if (faintedUnit.IsPlayerUnit)
         {
-            // Player's pokemon fainted
+            // Le Pokémon du joueur est K.O.
             var nextPokemon = playerParty.GetHealthyPokemon();
             if (nextPokemon != null)
-                OpenPartyScreen();  // Switch to another pokemon
+                OpenPartyScreen();  // Changer pour un autre Pokémon
             else
-                BattleOver(false);  // No healthy pokemon left, player loses
+                BattleOver(false);  // Plus de Pokémon en bonne santé, le joueur perd
         }
         else
         {
-            // Enemy's pokemon fainted
+            // Le Pokémon ennemi est K.O.
             if (!isTrainerBattle)
             {
-                BattleOver(true);  // Wild pokemon battle won
+                BattleOver(true);  // Combat contre un Pokémon sauvage gagné
             }
             else
             {
                 var nextPokemon = trainerParty.GetHealthyPokemon();
                 if (nextPokemon != null)
-                    StartCoroutine(AboutToUse(nextPokemon));  // Ask player if they want to switch
+                    StartCoroutine(AboutToUse(nextPokemon));  // Demande au joueur s'il veut changer de Pokémon
                 else
-                    BattleOver(true);  // Trainer has no more pokemons, player wins
+                    BattleOver(true);  // Plus de Pokémon pour le dresseur, le joueur gagne
             }
         }
     }
 
-
+    // Gère la mise à jour en fonction de l'état de la bataille
     public void HandleUpdate()
     {
         if (state == BattleState.ActionSelection)
@@ -505,6 +483,7 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    // Gère la sélection d'action par le joueur
     void HandleActionSelection()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -524,28 +503,29 @@ public class BattleSystem : MonoBehaviour
         {
             if (currentAction == 0)
             {
-                // Fight
+                // Combat
                 MoveSelection();
             }
             else if (currentAction == 1)
             {
-                // Bag
+                // Sac
                 StartCoroutine(RunTurns(BattleAction.UseItem));
             }
             else if (currentAction == 2)
             {
-                // Pokemon
+                // Pokémon
                 prevState = state;
                 OpenPartyScreen();
             }
             else if (currentAction == 3)
             {
-                // Run
+                // Fuite
                 StartCoroutine(RunTurns(BattleAction.Run));
             }
         }
     }
 
+    // Gère la sélection de mouvement par le joueur
     void HandleMoveSelection()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -575,14 +555,12 @@ public class BattleSystem : MonoBehaviour
                     dialogBox.EnableCalculBar(true);
                     SetActiveGame("Simple");
                     additionSimple.NextQuestion();
-
                 }
                 else if (currentMove == 1)
                 {
                     dialogBox.EnableCalculBarMoyen(true);
                     SetActiveGame("Moyen");
                     additionMoyen.NextQuestion();
-
                 }
                 else
                 {
@@ -590,7 +568,6 @@ public class BattleSystem : MonoBehaviour
                     SetActiveGame("Difficile");
                     additionDifficile.NextQuestion();
                 }
-
             }
             else if (playerUnit.Pokemon.Base.Name == "Soustrix")
             {
@@ -599,14 +576,12 @@ public class BattleSystem : MonoBehaviour
                     dialogBox.EnableCalculBarSoustra(true);
                     SetActiveGame("soustractionSimple");
                     soustractionSimple.NextQuestion();
-
                 }
                 else if (currentMove == 1)
                 {
                     dialogBox.EnableCalculBarSoustraMoyen(true);
                     SetActiveGame("soustractionMoyen");
                     soustractionMoyen.NextQuestion();
-
                 }
                 else
                 {
@@ -614,23 +589,20 @@ public class BattleSystem : MonoBehaviour
                     SetActiveGame("soustractionDifficile");
                     soustractionDifficile.NextQuestion();
                 }
-
             }
-            if (playerUnit.Pokemon.Base.Name == "Multiplix")
+            else if (playerUnit.Pokemon.Base.Name == "Multiplix")
             {
                 if (currentMove == 0)
                 {
                     dialogBox.EnableCalculBarMulti(true);
                     SetActiveGame("multiplicationSimple");
                     multiplicationSimple.NextQuestion();
-
                 }
                 else if (currentMove == 1)
                 {
                     dialogBox.EnableCalculBarMultiMoyen(true);
                     SetActiveGame("multiplicationMoyen");
                     multiplicationMoyen.NextQuestion();
-
                 }
                 else
                 {
@@ -638,23 +610,20 @@ public class BattleSystem : MonoBehaviour
                     SetActiveGame("multiplicationDifficile");
                     multiplicationDifficile.NextQuestion();
                 }
-
             }
-            if (playerUnit.Pokemon.Base.Name == "Dividix")
+            else if (playerUnit.Pokemon.Base.Name == "Dividix")
             {
                 if (currentMove == 0)
                 {
                     dialogBox.EnableCalculBarDivi(true);
                     SetActiveGame("divisionSimple");
                     divisionSimple.NextQuestion();
-
                 }
                 else if (currentMove == 1)
                 {
                     dialogBox.EnableCalculBarDiviMoyen(true);
                     SetActiveGame("divisionMoyen");
                     divisionMoyen.NextQuestion();
-
                 }
                 else
                 {
@@ -664,9 +633,7 @@ public class BattleSystem : MonoBehaviour
                 }
             }
             StartCoroutine(RunTurns(BattleAction.Move));
-
         }
-
         else if (Input.GetKeyDown(KeyCode.X))
         {
             dialogBox.EnableMoveSelector(false);
@@ -675,6 +642,7 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    // Gère la sélection de Pokémon par le joueur
     void HandlePartySelection()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -695,12 +663,12 @@ public class BattleSystem : MonoBehaviour
             var selectedMember = playerParty.Pokemons[currentMember];
             if (selectedMember.HP <= 0)
             {
-                partyScreen.SetMessageText("You can't send out a fainted pokemon");
+                partyScreen.SetMessageText("Vous ne pouvez pas envoyer un Pokémon évanoui.");
                 return;
             }
             if (selectedMember == playerUnit.Pokemon)
             {
-                partyScreen.SetMessageText("You can't switch with the same pokemon");
+                partyScreen.SetMessageText("Vous ne pouvez pas échanger avec le même Pokémon.");
                 return;
             }
 
@@ -721,7 +689,7 @@ public class BattleSystem : MonoBehaviour
         {
             if (playerUnit.Pokemon.HP <= 0)
             {
-                partyScreen.SetMessageText("You have to choose a pokemon to continue");
+                partyScreen.SetMessageText("Vous devez choisir un Pokémon pour continuer.");
                 return;
             }
 
@@ -737,6 +705,7 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    // Gère le moment où le dresseur adverse s'apprête à utiliser un nouveau Pokémon
     void HandleAboutToUse()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
@@ -746,37 +715,36 @@ public class BattleSystem : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.E))
-        { // Assume Z is the confirm button
+        {
             dialogBox.EnableChoiceBox(false);
-            state = BattleState.Busy; // Block other inputs
+            state = BattleState.Busy; // Bloque d'autres entrées
             if (aboutToUseChoice)
             {
-                Debug.Log("Player chose to switch Pokémon.");
-                prevState = state; // Remember the current state
+                Debug.Log("Le joueur a choisi de changer de Pokémon.");
+                prevState = state; // Mémorise l'état actuel
                 OpenPartyScreen();
             }
             else
             {
-                Debug.Log("Player chose not to switch Pokémon.");
+                Debug.Log("Le joueur a choisi de ne pas changer de Pokémon.");
                 StartCoroutine(SendNextTrainerPokemon());
             }
         }
     }
 
-
-
+    // Échange de Pokémon
     IEnumerator SwitchPokemon(Pokemon newPokemon)
     {
         if (playerUnit.Pokemon.HP > 0)
         {
-            yield return dialogBox.TypeDialog($"Come back {playerUnit.Pokemon.Base.Name}");
+            yield return dialogBox.TypeDialog($"Reviens {playerUnit.Pokemon.Base.Name}");
             playerUnit.PlayFaintAnimation();
             yield return new WaitForSeconds(2f);
         }
 
         playerUnit.Setup(newPokemon);
         dialogBox.SetMoveNames(newPokemon.Moves);
-        yield return dialogBox.TypeDialog($"Go {newPokemon.Base.Name}!");
+        yield return dialogBox.TypeDialog($"Vas-y {newPokemon.Base.Name} !");
 
         if (prevState == null)
         {
@@ -789,35 +757,35 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    // Envoie le prochain Pokémon du dresseur
     IEnumerator SendNextTrainerPokemon()
     {
-        Debug.Log("Sending out next trainer Pokémon.");
+        Debug.Log("Envoi du prochain Pokémon du dresseur.");
         state = BattleState.Busy;
 
         var nextPokemon = trainerParty.GetHealthyPokemon();
         enemyUnit.Setup(nextPokemon);
-        yield return dialogBox.TypeDialog($"{trainer.Name} send out {nextPokemon.Base.Name}!");
+        yield return dialogBox.TypeDialog($"{trainer.Name} envoie {nextPokemon.Base.Name} !");
 
-        Debug.Log("Next trainer Pokémon sent out. Resuming battle.");
+        Debug.Log("Prochain Pokémon du dresseur envoyé. Reprise du combat.");
         state = BattleState.RunningTurn;
-        yield return new WaitForSeconds(1); // Wait for the text animation to complete
-        ActionSelection();  // Now move to action selection
+        yield return new WaitForSeconds(1); // Attendre la fin de l'animation du texte
+        ActionSelection();  // Passez maintenant à la sélection d'action
     }
 
-
-
+    // Lance une Pokéball
     IEnumerator ThrowPokeball()
     {
         state = BattleState.Busy;
 
         if (isTrainerBattle)
         {
-            yield return dialogBox.TypeDialog($"You can't steal the trainers pokemon!");
+            yield return dialogBox.TypeDialog($"Vous ne pouvez pas voler les Pokémon des dresseurs !");
             state = BattleState.RunningTurn;
             yield break;
         }
 
-        yield return dialogBox.TypeDialog($"{player.Name} used POKEBALL!");
+        yield return dialogBox.TypeDialog($"{player.Name} utilise une Pokéball !");
 
         var pokeballObj = Instantiate(pokeballSprite, playerUnit.transform.position - new Vector3(2, 0), Quaternion.identity);
         var pokeball = pokeballObj.GetComponent<SpriteRenderer>();
@@ -837,33 +805,34 @@ public class BattleSystem : MonoBehaviour
 
         if (shakeCount == 4)
         {
-            // Pokemon is caught
-            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} was caught");
+            // Pokémon est capturé
+            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} a été capturé");
             yield return pokeball.DOFade(0, 1.5f).WaitForCompletion();
 
             playerParty.AddPokemon(enemyUnit.Pokemon);
-            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} has been added to your party");
+            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} a été ajouté à votre équipe");
 
             Destroy(pokeball);
             BattleOver(true);
         }
         else
         {
-            // Pokemon broke out
+            // Pokémon s'est libéré
             yield return new WaitForSeconds(1f);
             pokeball.DOFade(0, 0.2f);
             yield return enemyUnit.PlayBreakOutAnimation();
 
             if (shakeCount < 2)
-                yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} broke free");
+                yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name} s'est libéré");
             else
-                yield return dialogBox.TypeDialog($"Almost caught it");
+                yield return dialogBox.TypeDialog($"Presque capturé");
 
             Destroy(pokeball);
             state = BattleState.RunningTurn;
         }
     }
 
+    // Tentative de capturer un Pokémon
     int TryToCatchPokemon(Pokemon pokemon)
     {
         float a = (3 * pokemon.MaxHp - 2 * pokemon.HP) * pokemon.Base.CatchRate * 1 / (3 * pokemon.MaxHp);
@@ -885,13 +854,14 @@ public class BattleSystem : MonoBehaviour
         return shakeCount;
     }
 
+    // Tentative de fuite du combat
     IEnumerator TryToEscape()
     {
         state = BattleState.Busy;
 
         if (isTrainerBattle)
         {
-            yield return dialogBox.TypeDialog($"You can't run from trainer battles!");
+            yield return dialogBox.TypeDialog($"Vous ne pouvez pas fuir les combats contre les dresseurs !");
             state = BattleState.RunningTurn;
             yield break;
         }
@@ -903,7 +873,7 @@ public class BattleSystem : MonoBehaviour
 
         if (enemySpeed < playerSpeed)
         {
-            yield return dialogBox.TypeDialog($"Ran away safely!");
+            yield return dialogBox.TypeDialog($"Vous avez fui en toute sécurité !");
             BattleOver(true);
         }
         else
@@ -913,20 +883,18 @@ public class BattleSystem : MonoBehaviour
 
             if (UnityEngine.Random.Range(0, 256) < f)
             {
-                yield return dialogBox.TypeDialog($"Ran away safely!");
+                yield return dialogBox.TypeDialog($"Vous avez fui en toute sécurité !");
                 BattleOver(true);
             }
             else
             {
-                yield return dialogBox.TypeDialog($"Can't escape!");
+                yield return dialogBox.TypeDialog($"Impossible de fuir !");
                 state = BattleState.RunningTurn;
             }
         }
-
-
-
     }
 
+    // Réinitialise toutes les barres de calcul
     void test()
     {
         dialogBox.EnableCalculBar(false);
@@ -944,9 +912,5 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnableCalculBarDivi(false);
         dialogBox.EnableCalculBarDiviMoyen(false);
         dialogBox.EnableCalculBarDiviDifficile(false);
-
-
-
-
     }
 }

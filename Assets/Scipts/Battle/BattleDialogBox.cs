@@ -151,7 +151,7 @@ public class BattleDialogBox : MonoBehaviour
             else
                 moveTexts[i].color = Color.black;
         }
-
+        descText.text = move.Base.Description.ToString();
     }
 
     public void SetMoveNames(List<Move> moves)

@@ -17,6 +17,11 @@ public class PartyScreenP : MonoBehaviour
         panel.SetActive(false);  // Assurez-vous que le panel est désactivé au démarrage
     }
 
+    public void Init()
+    {
+        memberSlots = GetComponentsInChildren<PartyMemberUI>(true);
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))  // Ecoute pour la touche 'E'
