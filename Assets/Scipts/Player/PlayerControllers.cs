@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,25 +14,25 @@ public class PlayerControllers : MonoBehaviour
     [SerializeField] private Sprite playerSprite;  // Sprite du personnage joueur
 
     public float moveSpeed = 5.0f;
-    public LayerMask solidObjectsLayer;  
-    public LayerMask interactableLayer;  
-    public LayerMask grassLayer;        
-    public LayerMask fovLayer;           
+    public LayerMask solidObjectsLayer;
+    public LayerMask interactableLayer;
+    public LayerMask grassLayer;
+    public LayerMask fovLayer;
 
     public event Action OnEncountered;   // Déclenché lors de rencontres aléatoires
     public event Action<Collider2D> OnEnterTrainersView;  // Déclenché lorsque le joueur entre dans le champ de vision d'un dresseur
     private Character character;
 
     private bool isMoving;
-    private int nbMathsball = 1; 
-    private Vector2 input;  
+    private int nbMathsball = 1;
+    private Vector2 input;
     private Animator animator;  // Composant pour contrôler les animations
+
 
     private void Awake()
     {
         character = GetComponent<Character>();
         animator = GetComponent<Animator>();  // Initialisation du composant Animator
-
     }
 
     public void HandleUpdate()
@@ -51,7 +53,7 @@ public class PlayerControllers : MonoBehaviour
 
         character.HandleUpdate();
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.E))
             Interact();
     }
 
