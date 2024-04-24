@@ -15,12 +15,8 @@ public class SlideMenu : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);  // Optional based on your game needs
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+
     }
 
     void Start()

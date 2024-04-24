@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class PokemonParty : MonoBehaviour
 {
     [SerializeField] List<Pokemon> pokemons;  // Liste contenant les Pokémon de l'équipe
+    public event Action OnPartyUpdated;
+
 
     public List<Pokemon> Pokemons
     {
@@ -43,6 +49,9 @@ public class PokemonParty : MonoBehaviour
         if (pokemons.Count < 3)
         {
             pokemons.Add(newPokemon);  // Ajoute un nouveau Pokémon si l'équipe en contient moins de trois
+            OnPartyUpdated?.Invoke();  // Déclenche l'événement
+
+            Debug.Log($"Pokemon added. Total now: {pokemons.Count}");
         }
         else
         {

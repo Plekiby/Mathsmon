@@ -1,5 +1,84 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &32727382622218820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2626627962746270465}
+  - component: {fileID: 1649557431826029868}
+  - component: {fileID: 2383437850628444736}
+  m_Layer: 0
+  m_Name: Instruction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2626627962746270465
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32727382622218820}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3456777896781315527}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 567.4505, y: 0}
+  m_SizeDelta: {x: 347.541, y: 36.04}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1649557431826029868
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32727382622218820}
+  m_CullTransparentMesh: 1
+--- !u!114 &2383437850628444736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32727382622218820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 0486da67157df99419f51c033d5dca4e, type: 3}
+    m_FontSize: 30
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 3
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Appuyer sur A pour quitter le menu
 --- !u!1 &64882280470227051
 GameObject:
   m_ObjectHideFlags: 0
@@ -5721,7 +5800,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3456777896781315527
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5738,6 +5817,7 @@ RectTransform:
   - {fileID: 2405783407187606344}
   - {fileID: 4926997861768198606}
   - {fileID: 8692403128817218805}
+  - {fileID: 2626627962746270465}
   m_Father: {fileID: 8090431171066949574}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5796,7 +5876,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 1503912254949722420}
-  messageText: {fileID: 1764342224981163841}
   memberSlots:
   - {fileID: 6066364950264949158}
   - {fileID: 3569308853957119129}
@@ -16876,7 +16955,7 @@ Transform:
   m_GameObject: {fileID: 5438542993997905817}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.07, y: -18.486431, z: 0.09040244}
+  m_LocalPosition: {x: -2.9, y: -4.8, z: 0.09040244}
   m_LocalScale: {x: 2.5190248, y: 2.6228952, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -17041,15 +17120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfbffda7e3a7bd94fa5bb22a3129e4e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemons:
-  - _base: {fileID: 11400000, guid: a36d13b4a11b70544be477d5559f6c8e, type: 2}
-    level: 10
-    currentWins: 1
-    winsRequiredForNextLevel: 2
-  - _base: {fileID: 11400000, guid: a36d13b4a11b70544be477d5559f6c8e, type: 2}
-    level: 8
-    currentWins: 1
-    winsRequiredForNextLevel: 2
+  pokemons: []
 --- !u!61 &3721263455823687774
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -24651,7 +24722,7 @@ Transform:
   m_GameObject: {fileID: 7732137730910662019}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.579344, y: 0.39643177, z: -0.09040244}
+  m_LocalPosition: {x: 53.1, y: 0.5, z: -0.09040244}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

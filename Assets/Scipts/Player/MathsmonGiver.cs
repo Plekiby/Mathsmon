@@ -14,10 +14,11 @@ public class MathsmonGiver : MonoBehaviour
     {
         yield return DialogManager.Instance.ShowDialog(dialog);  // Affiche le dialogue initial
 
-        yield return new WaitForSeconds(3f); 
+        yield return new WaitForSeconds(3f);
+
+        pokemon.Init();
 
         // Initialisation du Pokémon et ajout à la partie du joueur
-        pokemon.Init(); 
         player.GetComponent<PokemonParty>().AddPokemon(pokemon); 
 
         used = true;  

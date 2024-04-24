@@ -22,7 +22,7 @@ public class PlayerControllers : MonoBehaviour
     private Character character;
 
     private bool isMoving;
-    private int nbMathsball = 1;
+    private int nbMathsball = 10;
     private Vector2 input;
     private Animator animator;  // Composant pour contrôler les animations
 
