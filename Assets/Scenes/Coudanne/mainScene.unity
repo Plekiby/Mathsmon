@@ -3748,8 +3748,8 @@ Transform:
   m_GameObject: {fileID: 837050464}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.079525, y: 0.1569233, z: 0.28784922}
-  m_LocalScale: {x: 2.6148322, y: 2.4889848, z: 1}
+  m_LocalPosition: {x: -2.0087, y: 0.0483, z: 0.28784922}
+  m_LocalScale: {x: 3.0577846, y: 2.9613943, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1765632197}
@@ -3767,25 +3767,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkDownSprites:
-  - {fileID: -118606964, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: 336200330, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: -375144348, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: -886058998, guid: 5e246169887ce65478194264df336038, type: 3}
+  - {fileID: 480313207, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: 785642462, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: -772812618, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: 1881780446, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
   walkUpSprites:
-  - {fileID: 1921599491, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: -486003099, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: -811652891, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: 2033163343, guid: 5e246169887ce65478194264df336038, type: 3}
+  - {fileID: 2041752917, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: -2022225254, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: -619109826, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: -1493305525, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
   walkRightSprites:
-  - {fileID: -1324714194, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: -1850631632, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: -1807796145, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: -709542486, guid: 5e246169887ce65478194264df336038, type: 3}
+  - {fileID: 979429734, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: 1334133301, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: 1838875080, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: -1972952361, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
   walkLeftSprites:
-  - {fileID: 992083745, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: -333234900, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: -335827796, guid: 5e246169887ce65478194264df336038, type: 3}
-  - {fileID: 1390245369, guid: 5e246169887ce65478194264df336038, type: 3}
+  - {fileID: -1403986076, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: -1870095275, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: 1029629178, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
+  - {fileID: -1810135014, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
   defaultDirection: 1
 --- !u!114 &837050467
 MonoBehaviour:
@@ -3858,7 +3858,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.36, y: 0.56}
+    oldSize: {x: 0.32, y: 0.46}
     newSize: {x: 0.36, y: 0.56}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -3935,7 +3935,7 @@ SpriteRenderer:
   m_SortingLayerID: -153808431
   m_SortingLayer: 7
   m_SortingOrder: 0
-  m_Sprite: {fileID: -118606964, guid: 5e246169887ce65478194264df336038, type: 3}
+  m_Sprite: {fileID: 480313207, guid: e92a68080f39a864eab4f9d7dbf95a20, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
