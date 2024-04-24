@@ -44,4 +44,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/route 101/route_101.unity
     guid: a80b71917807dc145b7dc072706e5b61
+  - enabled: 1
+    path: Assets/Scenes/NamePlayer.unity
+    guid: a87b8804abf460647be0a8b06d0de457
   m_configObjects: {}
