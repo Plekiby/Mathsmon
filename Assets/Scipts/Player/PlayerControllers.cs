@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,22 +35,35 @@ public class PlayerControllers : MonoBehaviour
 
     public void HandleUpdate()
     {
-        if (!character.IsMoving)
+        if (!isMoving)
         {
             input.x = Input.GetAxisRaw("Horizontal");
             input.y = Input.GetAxisRaw("Vertical");
 
-            // remove diagonal movement
+            // Éviter le mouvement diagonal
             if (input.x != 0) input.y = 0;
 
             if (input != Vector2.zero)
             {
-                StartCoroutine(character.Move(input, OnMoveOver));
+                // Configuration de l'animation en fonction du mouvement
+                animator.SetFloat("moveX", input.x);
+                animator.SetFloat("moveY", input.y);
+
+                Vector3 targetPos = transform.position;
+                targetPos.x += input.x;
+                targetPos.y += input.y;
+
+                // Démarrage de la coroutine de mouvement si la cible est accessible
+                if (IsWalkable(targetPos))
+                {
+                    StartCoroutine(Move(targetPos));
+                }
             }
         }
 
-        character.HandleUpdate();
+        animator.SetBool("isMoving", isMoving);
 
+        // Interaction avec les objets ou personnages
         if (Input.GetKeyDown(KeyCode.E))
             Interact();
     }
@@ -73,7 +84,7 @@ public class PlayerControllers : MonoBehaviour
         }
     }
 
-    private IEnumerator Move(Vector3 targetPos)
+    /*private IEnumerator Move(Vector3 targetPos)
     {
         isMoving = true;
 
@@ -90,6 +101,45 @@ public class PlayerControllers : MonoBehaviour
         // Vérification des rencontres et si le joueur est vu par un dresseur
         CheckForEncounters();
         CheckIfInTrainersView();
+    }*/
+
+    private IEnumerator Move(Vector3 targetPos)
+    {
+        isMoving = true;
+        animator.SetBool("isMoving", true);
+
+        // Déplacement progressif vers la position cible
+        while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        transform.position = targetPos;
+        isMoving = false;
+        animator.SetBool("isMoving", false);
+
+        // Vérification des interactions et déclenchements après le mouvement
+        PostMoveCheck();
+    }
+
+    private void PostMoveCheck()
+    {
+        // Vérifier les rencontres potentielles
+        CheckForEncounters();
+        CheckIfInTrainersView();
+
+        // Vérifier d'autres déclencheurs potentiels
+        var colliders = Physics2D.OverlapCircleAll(transform.position - new Vector3(0, character.OffsetY), 0.2f, GameLayers.i.TriggerableLayers);
+        foreach (var collider in colliders)
+        {
+            var triggerable = collider.GetComponent<IPlayerTriggerable>();
+            if (triggerable != null)
+            {
+                triggerable.OnPlayerTriggered(this);
+                break; // Interrompre la boucle après la première interaction valide pour éviter les multiples déclenchements
+            }
+        }
     }
 
     private bool IsWalkable(Vector3 targetPos)
@@ -156,4 +206,3 @@ public class PlayerControllers : MonoBehaviour
     public Character Character => character;
 
 }
-
