@@ -280,4 +280,9 @@ public class PlayerControllers : MonoBehaviour
             return pokemon;
         }
 
+    public void retourLobby()
+    {
+        SavePlayer();
+        SceneManager.LoadScene("Menu");
+    }
 }
