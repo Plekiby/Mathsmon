@@ -15,10 +15,9 @@ public class PlayerData
     public UnityEngine.Vector3 pos;
     public List<string> layer;
     public List<Pokemon> pokemonTeam;
-    List<global::Pokemon> pokemonTeam1;
     public string currentScene;
 
-    public PlayerData(PlayerControllers player, List<global::Pokemon> pokemonTeam1)
+    public PlayerData(PlayerControllers player, List<global::Pokemon> globalPokemons)
     {
         Debug.Log($"Entrée");
         speed = player.moveSpeed;
@@ -39,7 +38,7 @@ public class PlayerData
             this.position[2] = ConvertDoubleToFloat(v);
             currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         }
-        this.pokemonTeam1 = pokemonTeam1;
+        this.pokemonTeam = ConvertGlobalPokemonsToPlayerDataPokemons(globalPokemons);
     }
 
 
@@ -62,4 +61,23 @@ public class PlayerData
     {
         return (float)value;
     }
+
+    private List<PlayerData.Pokemon> ConvertGlobalPokemonsToPlayerDataPokemons(List<global::Pokemon> globalPokemons)
+    {
+        List<PlayerData.Pokemon> convertedList = new List<PlayerData.Pokemon>();
+        foreach (var globalPokemon in globalPokemons)
+        {
+            PlayerData.Pokemon localPokemon = new PlayerData.Pokemon
+            {
+                Base = globalPokemon.Base, 
+                Level = globalPokemon.Level, 
+                CurrentWins = globalPokemon.getcurrentWins(),
+                WinsRequiredForNextLevel = globalPokemon.getwinsRequiredForNextLevel(),
+            };
+            convertedList.Add(localPokemon);
+        }
+        return convertedList;
+    }
+
+
 }

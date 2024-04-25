@@ -34,9 +34,7 @@ public static class SaveSystemTrue
             else
             {
                 Debug.Log($"erreur");
-            }
-            
-            //Debug.Log($"Saved position: {data.position[2]}");
+            }  
         }
     }
 
