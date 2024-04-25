@@ -12863,19 +12863,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4731380641644822717}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3588391945921890056}
-        m_TargetAssemblyTypeName: PlayerControllers, Assembly-CSharp
-        m_MethodName: SavePlayer
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &4031611487941278326
 GameObject:
   m_ObjectHideFlags: 0
