@@ -237,6 +237,7 @@ public class PlayerControllers : MonoBehaviour
         Debug.Log("Sauvegarde");
 
         SaveSystemTrue.SavePlayer(player, pokemonParty.Pokemons);
+        retourLobby();
     }
 
     public void LoadPlayer()

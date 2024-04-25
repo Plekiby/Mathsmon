@@ -12,7 +12,6 @@ public class PlayerData
     public float speed;
     double v = 0.09040244;
     public float[] position;
-    public UnityEngine.Vector3 pos;
     public List<string> layer;
     public List<Pokemon> pokemonTeam;
     public string currentScene;
