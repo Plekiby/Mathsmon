@@ -26,7 +26,7 @@ public class PlayerControllers : MonoBehaviour
     private int nbMathsball = 10;
     private Vector2 input;
     private Animator animator;  // Composant pour contrôler les animations
-
+    private string name;
     
     private void Awake()
     {
@@ -183,8 +183,15 @@ public class PlayerControllers : MonoBehaviour
 
     public string Name()
     {
-        playerName = system.name;
-        return playerName;
+        if (system == null)
+        {
+            return playerName;
+        }
+        else { 
+            playerName = system.name; 
+            return playerName;
+        }
+        return "chef";
     }
     public Sprite Sprite => playerSprite;
 

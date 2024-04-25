@@ -24,7 +24,7 @@ public class MathsmonGiver : MonoBehaviour
         used = true;  
 
         // Construit et affiche un dialogue indiquant que le joueur a reçu le Pokémon
-        string dialogText = $"{player.Name} a reçu un {pokemon.Base.Name}";
+        string dialogText = $"{player.Name()} a reçu un {pokemon.Base.Name}";
         yield return DialogManager.Instance.ShowDialogText(dialogText);
     }
 

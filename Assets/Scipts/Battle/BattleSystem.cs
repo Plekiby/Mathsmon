@@ -785,7 +785,7 @@ public class BattleSystem : MonoBehaviour
             yield break;
         }
 
-        yield return dialogBox.TypeDialog($"{player.Name} utilise une Pokéball !");
+        yield return dialogBox.TypeDialog($"{player.Name()} utilise une Pokéball !");
 
         var pokeballObj = Instantiate(pokeballSprite, playerUnit.transform.position - new Vector3(2, 0), Quaternion.identity);
         var pokeball = pokeballObj.GetComponent<SpriteRenderer>();
@@ -835,7 +835,7 @@ public class BattleSystem : MonoBehaviour
     // Tentative de capturer un Pokémon
     int TryToCatchPokemon(Pokemon pokemon)
     {
-        float a = (3 * pokemon.MaxHp - 2 * pokemon.HP) * pokemon.Base.CatchRate * 1 / (3 * pokemon.MaxHp);
+        float a = (3 * pokemon.MaxHp - 2 * pokemon.HP) * pokemon.Base.CatchRate * 2 / (3 * pokemon.MaxHp);
 
         if (a >= 255)
             return 4;
