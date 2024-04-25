@@ -8,7 +8,7 @@ public class DialogBoxNew : MonoBehaviour
 {
 
     [SerializeField] int lettersPerSecond;
-    [SerializeField] TextMeshProUGUI dialogText;
+    [SerializeField] Text dialogText;
     [SerializeField] GameObject NameBar;
 
     public void SetDialog(string dialog)

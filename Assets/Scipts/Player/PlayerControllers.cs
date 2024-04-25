@@ -10,6 +10,7 @@ public class PlayerControllers : MonoBehaviour
 {
     [SerializeField] private string playerName;  // Nom du personnage joueur
     [SerializeField] private Sprite playerSprite;  // Sprite du personnage joueur
+    [SerializeField] private NewSystem system;
 
     public float moveSpeed = 5.0f;
     public LayerMask solidObjectsLayer;
@@ -26,7 +27,7 @@ public class PlayerControllers : MonoBehaviour
     private Vector2 input;
     private Animator animator;  // Composant pour contrôler les animations
 
-
+    
     private void Awake()
     {
         character = GetComponent<Character>();
@@ -180,7 +181,11 @@ public class PlayerControllers : MonoBehaviour
         }
     }
 
-    public string Name => playerName;
+    public string Name()
+    {
+        playerName = system.name;
+        return playerName;
+    }
     public Sprite Sprite => playerSprite;
 
     public int getNbMathsball()
