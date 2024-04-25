@@ -8,9 +8,7 @@ public class NewSystem : MonoBehaviour
 {
     [SerializeField] DialogBoxNew dialogBox;
     [SerializeField] private TMP_InputField _inputField;
-    //[SerializeField] private PlayerControllers gamemanager;
     private string _name;
-    private bool _selected = false;
     void Start()
     {
         StartCoroutine(Introduction());
@@ -55,7 +53,7 @@ public class NewSystem : MonoBehaviour
                 yield return new WaitForSeconds(1f); 
                 yield return dialogBox.TypeDialog($"Mais d'abord rejoins-moi vite dans mon laboratoire, j'ai une suprise pour toi ! À tout de suite !!");
                 yield return new WaitForSeconds(1f);
-               // gamemanager.Name = _name;
+             
                 SceneManager.LoadScene("Chambre_PP");
             }
             yield return null;

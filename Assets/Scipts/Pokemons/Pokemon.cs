@@ -28,6 +28,14 @@ public class Pokemon
         winsRequiredForNextLevel = 2;  // Starting requirement for level 2
     }
 
+    public Pokemon(PokemonBase _base, int level, int currentWins, int winsRequiredForNextLevel)
+    {
+        this._base = _base;
+        this.level = level;
+        this.currentWins = currentWins;
+        this.winsRequiredForNextLevel = winsRequiredForNextLevel;  // Starting requirement for level 2
+    }
+
     // Serialize this Pokemon object to a Json string
     public string Serialize()
     {

@@ -5,12 +5,16 @@ using UnityEngine;
 
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEditor.SearchService;
 
 public class PlayerControllers : MonoBehaviour
 {
     [SerializeField] private string playerName;  // Nom du personnage joueur
     [SerializeField] private Sprite playerSprite;  // Sprite du personnage joueur
     [SerializeField] private NewSystem system;
+    [SerializeField] private PokemonParty pokemonParty;
+    [SerializeField] private PlayerControllers player;
 
     public float moveSpeed = 5.0f;
     public LayerMask solidObjectsLayer;
@@ -27,9 +31,18 @@ public class PlayerControllers : MonoBehaviour
     private Vector2 input;
     private Animator animator;  // Composant pour contrôler les animations
     private string name;
-    
+   
+
     private void Awake()
     {
+        AudioListener[] listeners = FindObjectsOfType<AudioListener>();
+        if (listeners.Length > 1)
+        {
+            for (int i = 1; i < listeners.Length; i++)
+            {
+                Destroy(listeners[i]);
+            }
+        }
         character = GetComponent<Character>();
         animator = GetComponent<Animator>();  // Initialisation du composant Animator
     }
@@ -214,7 +227,57 @@ public class PlayerControllers : MonoBehaviour
     {
         nbMathsball++;
     }
-
+   
     public Character Character => character;
+
+
+
+    public void SavePlayer()
+    {
+        Debug.Log("Sauvegarde");
+
+        SaveSystemTrue.SavePlayer(player, pokemonParty.Pokemons);
+    }
+
+    public void LoadPlayer()
+    {
+        PlayerData data = SaveSystemTrue.LoadPlayer();
+        if (data != null)
+        {
+            Debug.Log("Data loaded successfully.");
+
+            moveSpeed = data.speed;
+
+            if (data.position != null && data.position.Length >= 3)
+            {
+                Vector3 position = new Vector3(data.position[0], data.position[1], data.position[2]);
+                transform.position = position;
+                Debug.Log($"Player position set to {position}");
+                SceneManager.LoadScene(data.currentScene);
+          
+            }
+            else
+            {
+                Debug.LogError("Position data is either null or does not contain 3 elements.");
+            }
+
+            pokemonParty.Pokemons.Clear();
+            foreach (var pokemonData in data.pokemonTeam)
+            {
+                // Vous devrez peut-être convertir PlayerData.Pokemon en votre autre type Pokemon, si ce sont des types distincts
+                Pokemon pokemon = ConvertPlayerDataPokemonToPokemon(pokemonData);
+                pokemonParty.Pokemons.Add(pokemon);
+            }
+        }
+        else
+        {
+            Debug.LogError("Failed to load data.");
+        }
+    }
+        Pokemon ConvertPlayerDataPokemonToPokemon(PlayerData.Pokemon pokemonData)
+        {
+            Pokemon pokemon = new Pokemon(pokemonData.Base, pokemonData.Level, pokemonData.CurrentWins,pokemonData.WinsRequiredForNextLevel);
+            return pokemon;
+        }
 
 }

@@ -15,4 +15,6 @@ public class Portal : MonoBehaviour
             SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Single);
         }
     }
+
+ 
 }

@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class EssentialObjects : MonoBehaviour
 {
+    //public static EssentialObjects Instance { get; private set; }
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+ 
+     DontDestroyOnLoad(gameObject);
+          
     }
-}
+ }

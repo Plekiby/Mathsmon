@@ -23,7 +23,7 @@ public class SaveSystem : MonoBehaviour
         {
             PlayerPosition = new Vector3Serializable(player.transform.position),
             SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
-            PokemonData = player.GetComponent<PokemonParty>().Pokemons.Select(p => p.Serialize()).ToList()
+            //PokemonData = player.GetComponent<PokemonParty>().Pokemons.Select(p => p.Serialize()).ToList()
         };
 
         string json = JsonUtility.ToJson(data);

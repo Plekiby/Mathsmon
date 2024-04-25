@@ -54,7 +54,7 @@ public class AdditionDifficile : MonoBehaviour
     public void CreateNewQuestion()
     {
         System.Random rnd = new System.Random();
-        int _number1 = -rnd.Next(1, 1000);  // Ensure the number is negative
+        int _number1 = -rnd.Next(1, 1000);
         int _number2 = rnd.Next(0, 1000);
 
         number1.text = _number1.ToString();

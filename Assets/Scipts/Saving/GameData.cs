@@ -6,7 +6,7 @@ public class GameData
 {
     public Vector3Serializable PlayerPosition;
     public string SceneName;
-    public List<string> PokemonData; // Liste de données Pokémon sérialisées en JSON
+    // Liste de données Pokémon sérialisées en JSON
 }
 
 [System.Serializable]

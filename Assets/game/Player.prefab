@@ -169,13 +169,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94e77d94ffde79f4ebf2bc4a9904a206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerName: 
+  playerSprite: {fileID: 0}
+  system: {fileID: 0}
+  pokemonParty: {fileID: 4184127467563279445}
+  player: {fileID: 5338924651010947629}
   moveSpeed: 3
   solidObjectsLayer:
     serializedVersion: 2
     m_Bits: 64
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 0
   grassLayer:
     serializedVersion: 2
     m_Bits: 4294967295
+  fovLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &4184127467563279445
 MonoBehaviour:
   m_ObjectHideFlags: 0

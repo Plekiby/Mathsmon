@@ -12864,9 +12864,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SaveSystem, Assembly-CSharp
-        m_MethodName: SaveGameData
+      - m_Target: {fileID: 3588391945921890056}
+        m_TargetAssemblyTypeName: PlayerControllers, Assembly-CSharp
+        m_MethodName: SavePlayer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -17095,6 +17095,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: Pierre
   playerSprite: {fileID: 814740372, guid: d32e6ca3313b2084686ddf6061856a2d, type: 3}
+  system: {fileID: 0}
+  pokemonParty: {fileID: 1181298155527227876}
+  player: {fileID: 3588391945921890056}
   moveSpeed: 5
   solidObjectsLayer:
     serializedVersion: 2
@@ -17120,7 +17123,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfbffda7e3a7bd94fa5bb22a3129e4e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemons: []
+  pokemons:
+  - _base: {fileID: 11400000, guid: a36d13b4a11b70544be477d5559f6c8e, type: 2}
+    level: 20
+    currentWins: 0
+    winsRequiredForNextLevel: 20
 --- !u!61 &3721263455823687774
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -24722,7 +24729,7 @@ Transform:
   m_GameObject: {fileID: 7732137730910662019}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 53.1, y: 0.5, z: -0.09040244}
+  m_LocalPosition: {x: -27.8, y: -3.3, z: -0.09040244}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
