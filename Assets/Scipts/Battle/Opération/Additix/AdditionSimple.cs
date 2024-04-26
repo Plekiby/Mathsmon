@@ -56,8 +56,8 @@ public class AdditionSimple : MonoBehaviour
     public void CreateNewQuestion()
     {
         System.Random rnd = new System.Random();
-        int _number1 = rnd.Next(0, 1000);
-        int _number2 = rnd.Next(0, 1000);
+        int _number1 = rnd.Next(0, 10);
+        int _number2 = rnd.Next(0, 10);
 
         number1.text = _number1.ToString();
         number2.text = _number2.ToString();
